@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading...</title>
+<meta name="description" content="">
+<link rel="icon" id="favicon-link" href="images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ============================= NAV ============================= -->
+<header class="site-header" id="site-header">
+  <div class="container header-inner">
+    <a href="#home" class="brand" id="brand-logo">
+      <span class="brand-mark" id="brand-mark"></span>
+      <span class="brand-name" id="brand-name"></span>
+    </a>
+
+    <nav class="main-nav" id="main-nav" aria-label="Primary">
+      <ul class="nav-links" id="nav-links"></ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="#" class="header-phone" id="header-phone"></a>
+      <a href="#" class="btn btn-primary btn-sm" id="header-cta"></a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="home">
+
+  <!-- ============================= HERO ============================= -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <div class="hero-copy reveal">
+        <p class="eyebrow eyebrow-light" id="hero-eyebrow"></p>
+        <h1 id="hero-headline"></h1>
+        <p class="hero-sub" id="hero-subheadline"></p>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-accent btn-lg" id="hero-cta-primary"></a>
+          <a href="#" class="btn btn-outline-light btn-lg" id="hero-cta-secondary"></a>
+        </div>
+        <div class="hero-rating" id="hero-rating">
+          <span class="stars" aria-hidden="true">★★★★★</span>
+          <span id="hero-rating-text"></span>
+        </div>
+      </div>
+      <div class="hero-media reveal" style="transition-delay:120ms">
+        <img id="hero-image" src="" alt="" width="640" height="640">
+      </div>
+    </div>
+    <a href="#services" class="scroll-cue" aria-label="Scroll to services">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ============================= SERVICES ============================= -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" id="services-eyebrow"></p>
+        <h2 id="services-heading"></h2>
+        <p class="section-sub" id="services-subheading"></p>
+      </div>
+      <div class="services-grid" id="services-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============================= ABOUT ============================= -->
+  <section class="section section-alt" id="about">
+    <div class="container about-inner">
+      <div class="about-media reveal">
+        <img id="about-image" src="" alt="" width="560" height="640">
+      </div>
+      <div class="about-copy reveal" style="transition-delay:100ms">
+        <p class="eyebrow" id="about-eyebrow"></p>
+        <h2 id="about-heading"></h2>
+        <p id="about-body"></p>
+        <div class="stats-grid" id="about-stats"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= GALLERY ============================= -->
+  <section class="section" id="gallery">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" id="gallery-eyebrow"></p>
+        <h2 id="gallery-heading"></h2>
+        <p class="section-sub" id="gallery-subheading"></p>
+      </div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============================= TESTIMONIALS ============================= -->
+  <section class="section section-dark" id="testimonials">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow eyebrow-light" id="testimonials-eyebrow"></p>
+        <h2 id="testimonials-heading"></h2>
+      </div>
+      <div class="testimonials-track-wrap reveal">
+        <div class="testimonials-track" id="testimonials-track"></div>
+        <div class="testimonials-dots" id="testimonials-dots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= HOURS + LOCATION ============================= -->
+  <section class="section" id="hours">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" id="hours-eyebrow"></p>
+        <h2 id="hours-heading"></h2>
+        <p class="section-sub" id="hours-subheading"></p>
+      </div>
+      <div class="hours-inner">
+        <div class="hours-panel reveal">
+          <ul class="hours-list" id="hours-list"></ul>
+          <p class="hours-emergency" id="hours-emergency"></p>
+          <div class="hours-address" id="hours-address"></div>
+          <a href="#" class="btn btn-outline" id="hours-directions" target="_blank" rel="noopener">Get Directions</a>
+        </div>
+        <div class="map-panel reveal" style="transition-delay:100ms">
+          <iframe id="map-iframe" src="" width="100%" height="100%" style="border:0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Business location map"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= CONTACT ============================= -->
+  <section class="section section-alt" id="contact">
+    <div class="container contact-inner">
+      <div class="contact-copy reveal">
+        <p class="eyebrow" id="contact-eyebrow"></p>
+        <h2 id="contact-heading"></h2>
+        <p class="section-sub" id="contact-subheading"></p>
+
+        <ul class="contact-info-list" id="contact-info-list"></ul>
+
+        <div class="social-links" id="social-links"></div>
+      </div>
+
+      <form class="contact-form reveal" id="contact-form" style="transition-delay:100ms" novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cf-name">Full Name</label>
+            <input type="text" id="cf-name" name="name" required autocomplete="name">
+          </div>
+          <div class="form-field">
+            <label for="cf-phone">Phone</label>
+            <input type="tel" id="cf-phone" name="phone" required autocomplete="tel">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="email" required autocomplete="email">
+          </div>
+          <div class="form-field">
+            <label for="cf-service">Service Needed</label>
+            <select id="cf-service" name="service" required></select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="cf-message">Tell Us About The Project</label>
+          <textarea id="cf-message" name="message" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg form-submit">
+          <span class="btn-label">Request Free Quote</span>
+        </button>
+        <p class="form-success" id="form-success" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark" id="footer-brand-mark"></span>
+      <span class="brand-name" id="footer-brand-name"></span>
+      <p id="footer-tagline"></p>
+      <div class="social-links" id="footer-social-links"></div>
+    </div>
+
+    <div class="footer-col">
+      <h3 id="footer-links-heading"></h3>
+      <ul id="footer-links-list"></ul>
+    </div>
+
+    <div class="footer-col">
+      <h3 id="footer-contact-heading"></h3>
+      <ul id="footer-contact-list"></ul>
+    </div>
+
+    <div class="footer-col">
+      <h3 id="footer-hours-heading"></h3>
+      <ul id="footer-hours-list"></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p id="footer-copyright"></p>
+      <p id="footer-license"></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================= MOBILE STICKY BAR ============================= -->
+<div class="mobile-bar" id="mobile-bar">
+  <a href="#" id="mobile-bar-call" class="mobile-bar-btn mobile-bar-call"></a>
+  <a href="#" id="mobile-bar-quote" class="mobile-bar-btn mobile-bar-quote"></a>
+</div>
+
+<!-- Lightbox for gallery -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close image">&times;</button>
+  <img id="lightbox-image" src="" alt="">
+</div>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
