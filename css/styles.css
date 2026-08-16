@@ -82,6 +82,48 @@ p { margin: 0; }
 .icon { width: 1em; height: 1em; }
 .icon-sm { width: 18px; height: 18px; flex-shrink: 0; }
 
+/* Visually hidden but still announced by screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -------------------------------------------------------------------- */
+/* Accessibility: skip link + focus states                              */
+/* -------------------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 12px;
+  z-index: 1000;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
 /* -------------------------------------------------------------------- */
 /* Reveal-on-scroll                                                     */
 /* -------------------------------------------------------------------- */
@@ -211,6 +253,18 @@ p { margin: 0; }
   flex-shrink: 0;
 }
 
+/* Used instead of the initials tile when business.logoImage is set */
+.brand-mark--image {
+  background: #fff;
+  padding: 4px;
+}
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 .main-nav { display: flex; }
 .nav-links { display: flex; align-items: center; gap: 32px; }
 .nav-links a {
@@ -299,7 +353,7 @@ p { margin: 0; }
 
 .hero-inner {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   align-items: center;
   gap: 56px;
   padding-top: 64px;
@@ -385,7 +439,7 @@ p { margin: 0; }
 /* -------------------------------------------------------------------- */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
 }
 .service-card {
@@ -421,7 +475,7 @@ p { margin: 0; }
 /* -------------------------------------------------------------------- */
 .about-inner {
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: 64px;
   align-items: center;
 }
@@ -435,7 +489,7 @@ p { margin: 0; }
 .about-copy h2 { font-size: clamp(1.9rem, 3vw, 2.4rem); margin-bottom: 20px; }
 .about-copy p { color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 36px; }
 
-.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .stat {
   padding: 20px 0;
   border-top: 1px solid var(--color-border);
@@ -448,6 +502,7 @@ p { margin: 0; }
   font-size: 2rem;
   font-weight: 600;
   color: var(--color-primary);
+  overflow-wrap: anywhere;
 }
 .stat-label { font-size: 0.88rem; color: var(--color-text-muted); }
 
@@ -456,7 +511,7 @@ p { margin: 0; }
 /* -------------------------------------------------------------------- */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 .gallery-item {
@@ -539,7 +594,12 @@ p { margin: 0; }
 
 .testimonial-card {
   scroll-snap-align: start;
-  flex: 0 0 min(420px, 86vw);
+  /* Sized relative to the track's own width (not the viewport), so the
+     peek is always an intentional, evenly-spaced fraction of a card —
+     never an arbitrary slice determined by how wide the browser happens
+     to be. ~2.3 cards visible on desktop, tuned down at each breakpoint
+     below. */
+  flex: 0 0 calc((100% - 48px) / 2.3);
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--radius-md);
@@ -573,7 +633,7 @@ p { margin: 0; }
 /* -------------------------------------------------------------------- */
 .hours-inner {
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: 48px;
   align-items: stretch;
 }
@@ -624,7 +684,7 @@ p { margin: 0; }
 /* -------------------------------------------------------------------- */
 .contact-inner {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 64px;
   align-items: start;
 }
@@ -648,6 +708,7 @@ p { margin: 0; }
   font-size: 0.85rem;
   transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
+.social-links .icon { width: 17px; height: 17px; }
 .social-links a:hover { background: var(--color-primary); color: #fff; transform: translateY(-2px); }
 
 .contact-form {
@@ -660,7 +721,7 @@ p { margin: 0; }
   flex-direction: column;
   gap: 20px;
 }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .form-field { display: flex; flex-direction: column; gap: 8px; }
 .form-field label { font-size: 0.85rem; font-weight: 600; color: var(--color-primary-dark); }
 .form-field input,
@@ -696,13 +757,35 @@ p { margin: 0; }
 }
 .form-success.is-visible { opacity: 1; max-height: 60px; }
 
+.form-error {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-error);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease), max-height var(--dur-med) var(--ease);
+}
+.form-error.is-visible { opacity: 1; max-height: 80px; }
+
+/* Honeypot spam trap — hidden from sighted users and screen readers,
+   but still present in the DOM for bots that fill in every field. */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* -------------------------------------------------------------------- */
 /* Footer                                                               */
 /* -------------------------------------------------------------------- */
 .site-footer { background: var(--color-dark); color: rgba(255,255,255,0.7); }
 .footer-inner {
   display: grid;
-  grid-template-columns: 1.4fr 0.85fr 0.85fr 0.85fr;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr) minmax(0, 0.85fr) minmax(0, 0.85fr);
   gap: 40px;
   padding: 80px 24px 56px;
 }
@@ -778,8 +861,8 @@ p { margin: 0; }
 }
 
 @media (max-width: 1024px) {
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 900px) {
@@ -797,6 +880,8 @@ p { margin: 0; }
   .map-panel { min-height: 300px; }
 
   .contact-inner { grid-template-columns: 1fr; }
+
+  .testimonial-card { flex-basis: calc((100% - 24px) / 1.5); }
 }
 
 @media (max-width: 760px) {
@@ -826,10 +911,12 @@ p { margin: 0; }
   .header-phone { display: none; }
 
   .services-grid { grid-template-columns: 1fr; }
-  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-inner { grid-template-columns: 1fr; padding: 60px 24px 40px; }
   .footer-brand { align-items: flex-start; }
+
+  .testimonial-card { flex-basis: 90%; }
 
   .form-row { grid-template-columns: 1fr; }
   .contact-form { padding: 28px; }

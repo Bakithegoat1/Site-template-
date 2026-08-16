@@ -13,6 +13,8 @@
 </head>
 <body>
 
+<a href="#home" class="skip-link">Skip to main content</a>
+
 <!-- ============================= NAV ============================= -->
 <header class="site-header" id="site-header">
   <div class="container header-inner">
@@ -55,7 +57,7 @@
         </div>
       </div>
       <div class="hero-media reveal" style="transition-delay:120ms">
-        <img id="hero-image" src="" alt="" width="640" height="640">
+        <img id="hero-image" src="" alt="" width="640" height="640" loading="lazy">
       </div>
     </div>
     <a href="#services" class="scroll-cue" aria-label="Scroll to services">
@@ -79,7 +81,7 @@
   <section class="section section-alt" id="about">
     <div class="container about-inner">
       <div class="about-media reveal">
-        <img id="about-image" src="" alt="" width="560" height="640">
+        <img id="about-image" src="" alt="" width="560" height="640" loading="lazy">
       </div>
       <div class="about-copy reveal" style="transition-delay:100ms">
         <p class="eyebrow" id="about-eyebrow"></p>
@@ -176,10 +178,22 @@
           <label for="cf-message">Tell Us About The Project</label>
           <textarea id="cf-message" name="message" rows="4" required></textarea>
         </div>
+
+        <input type="hidden" name="_subject" id="cf-subject">
+
+        <!-- Honeypot: hidden from sighted/keyboard/screen-reader users, but
+             a naive spam bot that fills every field will fill this one too.
+             Formspree drops submissions where "_gotcha" is non-empty. -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="cf-hp">Leave this field blank</label>
+          <input type="text" id="cf-hp" name="_gotcha" tabindex="-1" autocomplete="off">
+        </div>
+
         <button type="submit" class="btn btn-primary btn-lg form-submit">
           <span class="btn-label">Request Free Quote</span>
         </button>
         <p class="form-success" id="form-success" role="status" aria-live="polite"></p>
+        <p class="form-error" id="form-error" role="alert" aria-live="assertive"></p>
       </form>
     </div>
   </section>
