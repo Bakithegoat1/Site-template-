@@ -83,8 +83,9 @@ window.SITE_CONFIG = {
     subheading: "Tell us a bit about the project and we'll get back to you within one business hour during our regular hours.",
     // Create a form at formspree.io, then paste its endpoint here — it'll
     // look like "https://formspree.io/f/abcdwxyz". The form won't submit
-    // (it shows a clear "not connected" error instead) until this is real.
-    formEndpoint: "https://formspree.io/f/YOUR_FORM_ID",
+    // (it shows a clear "not connected" error instead) until this bracket
+    // placeholder is replaced with a real endpoint.
+    formEndpoint: "[FORMSPREE_ENDPOINT]",
     formSuccessMessage: "Thanks — your request has been received! A member of our team will reach out within one business hour.",
     formErrorMessage: "Something went wrong sending your request. Please try again, or call us directly.",
     services: [

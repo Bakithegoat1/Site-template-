@@ -593,7 +593,7 @@
       }
 
       var endpoint = cc.formEndpoint || "";
-      if (!endpoint || endpoint.indexOf("YOUR_FORM_ID") !== -1) {
+      if (!endpoint || endpoint.charAt(0) === "[") {
         showError("This form isn't connected yet — set contact.formEndpoint in config.js to a real Formspree endpoint.");
         return;
       }
