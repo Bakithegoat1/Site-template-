@@ -884,6 +884,8 @@ textarea:focus-visible,
 .footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .footer-brand .brand-name { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600; color: var(--color-bg); }
 .footer-brand p { font-size: 0.92rem; line-height: 1.6; max-width: 32ch; }
+.footer-service-areas { font-size: 0.85rem; color: color-mix(in srgb, var(--color-bg) 55%, transparent); }
+.footer-service-areas[hidden] { display: none; }
 .footer-col h3 { color: var(--color-bg); font-size: 0.95rem; font-weight: 600; margin-bottom: 20px; font-family: var(--font-body); }
 .footer-col ul { display: flex; flex-direction: column; gap: 12px; font-size: 0.92rem; }
 .footer-col a:hover { color: var(--color-bg); }
@@ -948,6 +950,31 @@ textarea:focus-visible,
 }
 .back-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
 .back-to-top:hover { filter: brightness(1.35); transform: translateY(-3px); }
+
+/* -------------------------------------------------------------------- */
+/* 404 page                                                             */
+/* -------------------------------------------------------------------- */
+.notfound-section {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+/* Scoped to body.page-404 so this outranks the mobile ".section { padding:
+   70px 0 }" responsive rule (same specificity, later in the file, would
+   otherwise clobber padding-top below var(--header-height) on mobile). */
+body.page-404 .notfound-section {
+  /* First section on the page, directly under the fixed header — needs
+     its own top clearance the way .hero gets via padding-top on itself. */
+  padding-top: calc(var(--header-height) + 64px);
+}
+.notfound-inner { max-width: 560px; margin: 0 auto; text-align: center; }
+.notfound-inner h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 16px; }
+.notfound-inner .section-sub { margin-bottom: 32px; }
+/* Elsewhere, the transparent/light-text header state relies on sitting
+   over the dark .hero — this page has no hero underneath it, so force
+   the solid, dark-text header state regardless of scroll position. */
+body.page-404 .site-header::before { opacity: 1; }
+body.page-404 .site-header:not(.is-scrolled) .brand { color: var(--color-text); }
 
 /* =========================================================================
    RESPONSIVE

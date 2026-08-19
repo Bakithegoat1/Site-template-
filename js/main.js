@@ -206,11 +206,46 @@
     el.setAttribute("content", content);
   }
 
+  // First entry in services.items — used to fill in the "primary service"
+  // slot of the auto-generated title/description below.
+  function primaryServiceTitle() {
+    var items = (CONFIG.services && CONFIG.services.items) || [];
+    return (items[0] && items[0].title) || "";
+  }
+
+  function cityStateString() {
+    var addr = (CONFIG.contact && CONFIG.contact.address) || {};
+    return [addr.city, addr.state].filter(Boolean).join(", ");
+  }
+
+  // Used whenever meta.pageTitle/description are left "" in config.js, so
+  // a client gets a sane default without writing SEO copy by hand — and
+  // it can never go stale, since it's built from the same business
+  // name / services / address data as the rest of the page.
+  function buildDefaultTitle() {
+    var name = (CONFIG.business && CONFIG.business.name) || "";
+    var service = primaryServiceTitle();
+    var loc = cityStateString();
+    var tail = [service, loc ? "in " + loc : ""].filter(Boolean).join(" ");
+    return tail ? name + " | " + tail : name;
+  }
+
+  function buildDefaultDescription() {
+    var name = (CONFIG.business && CONFIG.business.name) || "";
+    if (!name) return "";
+    var service = primaryServiceTitle();
+    var loc = cityStateString();
+    var bits = [name];
+    if (service) bits.push("provides " + service.toLowerCase());
+    if (loc) bits.push("for " + loc + " families");
+    return bits.join(" ") + ". Contact us for a free quote.";
+  }
+
   function renderMeta() {
     var meta = CONFIG.meta || {};
     var b = CONFIG.business || {};
-    var title = meta.pageTitle || b.name || "";
-    var desc = meta.description || "";
+    var title = meta.pageTitle || buildDefaultTitle();
+    var desc = meta.description || buildDefaultDescription();
     var url = meta.siteUrl || "";
     var image = joinUrl(url, meta.ogImage);
 
@@ -219,6 +254,12 @@
 
     var favicon = document.getElementById("favicon-link");
     if (favicon && meta.favicon) favicon.setAttribute("href", meta.favicon);
+
+    var appleTouchIcon = document.getElementById("apple-touch-icon-link");
+    if (appleTouchIcon) {
+      if (meta.appleTouchIcon) appleTouchIcon.setAttribute("href", meta.appleTouchIcon);
+      else appleTouchIcon.remove();
+    }
 
     setMetaByProperty("og:title", title);
     setMetaByProperty("og:description", desc);
@@ -261,6 +302,9 @@
       url: meta.siteUrl || undefined,
       telephone: c.phoneHref || undefined,
       email: c.email || undefined,
+      // Bracket placeholders (e.g. unverified priceRange) are left out of
+      // the structured data entirely rather than shipped as literal text.
+      priceRange: (b.priceRange && b.priceRange.charAt(0) !== "[") ? b.priceRange : undefined,
       address: {
         "@type": "PostalAddress",
         streetAddress: addr.line1 || "",
@@ -275,6 +319,10 @@
     var lng = parseFloat(b.geo && b.geo.lng);
     if (isFinite(lat) && isFinite(lng)) {
       data.geo = { "@type": "GeoCoordinates", latitude: lat, longitude: lng };
+    }
+
+    if (CONFIG.serviceAreas && CONFIG.serviceAreas.length) {
+      data.areaServed = CONFIG.serviceAreas.slice();
     }
 
     if (hours.structuredSchedule && hours.structuredSchedule.length) {
@@ -854,6 +902,16 @@
     set("footer-contact-heading", f.contactHeading || "Contact");
     set("footer-hours-heading", f.hoursHeading || "Hours");
 
+    var areasEl = document.getElementById("footer-service-areas");
+    if (areasEl) {
+      if (CONFIG.serviceAreas && CONFIG.serviceAreas.length) {
+        areasEl.textContent = "Areas We Serve: " + CONFIG.serviceAreas.join(", ");
+        areasEl.hidden = false;
+      } else {
+        areasEl.hidden = true;
+      }
+    }
+
     var linksList = document.getElementById("footer-links-list");
     if (linksList && nav.links) {
       linksList.innerHTML = visibleLinks(nav.links).map(function (l) {
@@ -943,6 +1001,7 @@
   function wireMobileNav() {
     var toggle = document.getElementById("nav-toggle");
     var nav = document.getElementById("main-nav");
+    if (!toggle || !nav) return;
 
     toggle.addEventListener("click", function () {
       var isOpen = nav.classList.toggle("is-open");
@@ -1036,8 +1095,14 @@
   function init() {
     applyColors();
     applySectionVisibility();
-    renderMeta();
-    renderStructuredData();
+    // 404.html carries its own static <title>/description/robots meta and
+    // has no LocalBusiness content to describe, so it opts out of both via
+    // a body class rather than getting the homepage's SEO tags stamped
+    // over its own.
+    if (!document.body.classList.contains("page-404")) {
+      renderMeta();
+      renderStructuredData();
+    }
     renderHeader();
     renderHero();
     renderServices();

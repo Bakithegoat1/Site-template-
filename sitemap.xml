@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Static file — a crawler fetches this directly and never runs
+  js/main.js, so it can't read js/config.js. If meta.siteUrl in
+  config.js changes, update the <loc> below (and robots.txt) by hand.
+
+  This is a single-page site: every #section is an anchor within
+  index.html, not a separate crawlable URL, so only the homepage is
+  listed here.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.example.com/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

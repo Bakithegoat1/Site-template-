@@ -1,0 +1,9 @@
+# This file, and sitemap.xml, are static — a crawler fetches them
+# directly and never runs js/main.js, so they can't read js/config.js.
+# If you change meta.siteUrl in config.js, update the Sitemap line below
+# (and every <loc> in sitemap.xml) to match by hand.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.example.com/sitemap.xml

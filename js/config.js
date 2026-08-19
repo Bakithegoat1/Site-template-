@@ -28,13 +28,29 @@
 window.SITE_CONFIG = {
 
   meta: {
-    pageTitle: "Northstar Home Services | Plumbing, Electrical & HVAC in Asheville, NC",
-    description: "Northstar Home Services provides plumbing, electrical, and HVAC repair for Asheville, NC families. [LICENSE_INSURANCE_STATUS]. Emergency service: [EMERGENCY_AVAILABILITY].",
+    // Leave pageTitle/description "" to auto-generate them from
+    // business.name + the first entry in services.items + contact.address
+    // (city, state) — see buildDefaultTitle()/buildDefaultDescription() in
+    // main.js. Set either one explicitly to override the template, e.g.
+    // once real license/insurance copy is confirmed and you want it in
+    // the description.
+    pageTitle: "",
+    description: "",
     favicon: "images/favicon.svg",
+    // Optional: a real 180x180 PNG for the iOS/iPadOS home-screen icon.
+    // Apple Touch Icon needs a raster format (SVG isn't reliably
+    // supported), so this is left blank rather than pointed at
+    // favicon.svg. Leave "" to omit the tag entirely.
+    appleTouchIcon: "",
     // The live domain this site will be deployed to (no trailing slash).
     // Used for Open Graph/Twitter "og:url", the canonical link, and the
-    // JSON-LD "url" field. example.com is the IANA-reserved placeholder
-    // domain — replace it with the real one before launch.
+    // JSON-LD "url" field — this one field IS the site's canonical URL.
+    // example.com is the IANA-reserved placeholder domain — replace it
+    // with the real one before launch. Also update robots.txt and
+    // sitemap.xml at the project root to match: those are plain static
+    // files a crawler fetches directly (never through index.html/JS), so
+    // they can't read this value automatically and must be kept in sync
+    // by hand whenever the real domain changes.
     siteUrl: "https://www.example.com",
     // Social share preview image, ideally 1200x630 and a raster format
     // (PNG/JPG) — Twitter and some Facebook crawlers don't render SVG.
@@ -57,6 +73,10 @@ window.SITE_CONFIG = {
     // or "Electrician" for a single-trade shop, or the broader
     // "HomeAndConstructionBusiness" (used here) for a multi-trade business.
     schemaType: "HomeAndConstructionBusiness",
+    // schema.org priceRange for the JSON-LD data — a relative indicator
+    // like "$$", or a real range like "$100-$5000". Left blank, the
+    // "priceRange" field is simply omitted rather than guessing.
+    priceRange: "[PRICE_RANGE]",
     // Exact coordinates (right-click the business's pin in Google Maps →
     // the lat/lng shown at the top of the context menu). Used for the
     // JSON-LD "geo" property, AND as the map embed fallback below when
@@ -269,6 +289,17 @@ window.SITE_CONFIG = {
     // Leave "" to skip straight to option 2, or 3 if that's empty too.
     mapEmbedSrc: ""
   },
+
+  // Towns/cities/neighborhoods served, beyond the home city in
+  // contact.address. Renders as an "Areas We Serve" line in the footer,
+  // and feeds the JSON-LD "areaServed" field — one list, two consumers,
+  // so it can't drift out of sync. Leave empty to omit both.
+  serviceAreas: [
+    "Asheville",
+    "Arden",
+    "Black Mountain",
+    "Weaverville"
+  ],
 
   footer: {
     tagline: "Locally owned and operated, serving Asheville since [FOUNDED_YEAR]. [LICENSE_INSURANCE_STATUS].",
