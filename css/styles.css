@@ -5,27 +5,36 @@
    below are placeholders only — js/main.js overwrites them at runtime
    from js/config.js. Edit config.js, not this file, to re-brand.
 
-   Palette system: --color-accent/-hover/-text are the ONLY brand color —
-   used solely for buttons, links, and small highlights. Everything else
-   (--color-text, --color-text-muted, --color-bg, --color-bg-alt,
-   --color-border) is grayscale. Inverted "dark" sections (hero,
-   testimonials, footer) reuse --color-text as a background and
-   --color-bg as foreground text rather than introducing new colors —
-   see the "Section shared" block below. Accent is only ever placed
-   against a light (--color-bg/--color-bg-alt) surface, or as a solid
-   button background paired with --color-accent-text, so the system
-   holds up whether a client's accent is dark, vivid, or muted.
+   Palette system: quietly colorful, not strictly monochrome. Backgrounds,
+   borders, and body copy are warm neutrals (a soft ivory/cream, not flat
+   gray) rather than true grayscale, and --color-accent is meant to be a
+   real, muted-but-saturated color (deep teal, terracotta, muted blue —
+   not near-black) that does visible work beyond buttons: eyebrow labels,
+   icon fills, link underlines, active nav state, stat numbers, focus
+   rings. --color-accent-soft is a light wash of it (auto-derived from
+   --color-accent via color-mix, so it updates for free when a client's
+   accent changes) used for icon-tile and card-hover backgrounds — that
+   wash is what keeps the palette feeling considered rather than empty.
+   Inverted "dark" sections (hero, testimonials, footer) reuse --color-text
+   as a background and --color-bg as foreground text rather than
+   introducing new colors — see the "Section shared" block below. Outside
+   of decorative low-opacity glows (which don't need to pass contrast),
+   accent is only ever placed against a light (--color-bg/--color-bg-alt)
+   surface, or as a solid button background paired with
+   --color-accent-text, so the system holds up whether a client's accent
+   is dark, vivid, or muted.
    ========================================================================= */
 
 :root {
-  --color-accent: #2A2A2A;
-  --color-accent-hover: #000000;
+  --color-accent: #2E6659;
+  --color-accent-hover: #234F45;
   --color-accent-text: #FFFFFF;
-  --color-text: #111111;
-  --color-text-muted: #555555;
-  --color-bg: #FFFFFF;
-  --color-bg-alt: #F7F7F7;
-  --color-border: #E5E5E5;
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg));
+  --color-text: #1C1916;
+  --color-text-muted: #5C5650;
+  --color-bg: #FFFEFB;
+  --color-bg-alt: #F7F2EA;
+  --color-border: #E6DFD3;
 
   /* Functional feedback colors for form success/error states — kept
      separate from the accent system above since they carry a fixed
@@ -314,12 +323,15 @@ textarea:focus-visible,
   background: var(--color-accent);
   transition: right var(--dur-fast) var(--ease);
 }
-.nav-links a:hover::after { right: 0; }
-.nav-links a:hover { color: var(--color-accent); }
+.nav-links a:hover::after,
+.nav-links a.is-active::after { right: 0; }
+.nav-links a:hover,
+.nav-links a.is-active { color: var(--color-accent); }
 /* Over the transparent/dark hero, fall back to the light neutral instead
-   of the accent so hover stays visible even when the accent is dark. */
+   of the accent so hover/active stays visible even when the accent is dark. */
 .site-header:not(.is-scrolled) .nav-links a::after { background: var(--color-bg); }
-.site-header:not(.is-scrolled) .nav-links a:hover { color: var(--color-bg); }
+.site-header:not(.is-scrolled) .nav-links a:hover,
+.site-header:not(.is-scrolled) .nav-links a.is-active { color: var(--color-bg); }
 
 .header-actions { display: flex; align-items: center; gap: 16px; }
 .header-phone {
@@ -369,14 +381,19 @@ textarea:focus-visible,
 .hero-bg {
   position: absolute;
   inset: 0;
-  /* Tonal grayscale gradient — no accent tint, so it always reads as a
-     neutral "dark section" regardless of the configured accent color. */
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-text) 100%, black) 0%,
-    var(--color-text) 55%,
-    color-mix(in srgb, var(--color-text) 80%, white) 100%
-  );
+  /* Tonal dark gradient with a low-opacity accent glow layered on top —
+     the glow is purely decorative texture (not text/icon foreground), so
+     it never risks the contrast problems a foreground use of accent could
+     have on a dark section; it just needs to be low-opacity enough to
+     stay "quiet" regardless of how saturated a client's accent is. */
+  background:
+    radial-gradient(ellipse at 15% 20%, color-mix(in srgb, var(--color-accent) 35%, transparent), transparent 55%),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-text) 100%, black) 0%,
+      var(--color-text) 55%,
+      color-mix(in srgb, var(--color-text) 80%, white) 100%
+    );
   z-index: -1;
 }
 .hero-bg::after {
@@ -466,7 +483,12 @@ textarea:focus-visible,
 .section-alt { background: var(--color-bg-alt); }
 /* Inverted section: reuses --color-text as background and --color-bg as
    foreground rather than adding a dedicated "dark" color variable. */
-.section-dark { background: var(--color-text); color: var(--color-bg); }
+.section-dark {
+  background:
+    radial-gradient(ellipse at 85% 0%, color-mix(in srgb, var(--color-accent) 25%, transparent), transparent 60%),
+    var(--color-text);
+  color: var(--color-bg);
+}
 .section-dark h2 { color: var(--color-bg); }
 
 .section-head { max-width: 640px; margin: 0 auto 56px; text-align: center; }
@@ -487,12 +509,13 @@ textarea:focus-visible,
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 36px 30px;
-  transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease), border-color var(--dur-hover) var(--ease);
+  transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease), border-color var(--dur-hover) var(--ease), background-color var(--dur-hover) var(--ease);
 }
 .service-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
   border-color: transparent;
+  background: var(--color-accent-soft);
 }
 .service-icon {
   width: 54px; height: 54px;
@@ -500,8 +523,7 @@ textarea:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg-alt);
-  border: 1px solid var(--color-border);
+  background: var(--color-accent-soft);
   color: var(--color-accent);
   font-size: 1.4rem;
   margin-bottom: 22px;
@@ -533,7 +555,7 @@ textarea:focus-visible,
 .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .stat {
   padding: 20px 0;
-  border-top: 1px solid var(--color-border);
+  border-top: 2px solid var(--color-accent-soft);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -562,7 +584,7 @@ textarea:focus-visible,
   border-radius: var(--radius-md);
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  background: var(--color-bg-alt);
+  background: var(--color-accent-soft);
 }
 .gallery-item img {
   width: 100%; height: 100%;
@@ -728,7 +750,6 @@ textarea:focus-visible,
   min-height: 340px;
   box-shadow: var(--shadow-sm);
 }
-.map-panel iframe { filter: grayscale(1); }
 
 /* -------------------------------------------------------------------- */
 /* Contact                                                              */

@@ -148,6 +148,9 @@
       accent: "--color-accent",
       accentHover: "--color-accent-hover",
       accentText: "--color-accent-text",
+      // Left unset in config.js by default — CSS derives it from --color-accent
+      // via color-mix() automatically. Only takes effect if a client sets it.
+      accentSoft: "--color-accent-soft",
       text: "--color-text",
       textMuted: "--color-text-muted",
       bg: "--color-bg",
@@ -583,6 +586,23 @@
   /* ---------------------------------------------------------------------
      9. Hours + Map
      --------------------------------------------------------------------- */
+  // Used only when hours.mapEmbedSrc (a real URL pasted from Google Maps'
+  // own Share > Embed a map dialog) is left blank. Coordinates pin an
+  // exact point regardless of whether the address text can be geocoded,
+  // so they're preferred over a text search — a fictional/unlisted
+  // address (as ships in this template by default) geocodes only to the
+  // city/zip level and shows the wrong kind of pin. Once a client's real
+  // business.geo lat/lng or mapEmbedSrc is filled in, this resolves.
+  function buildFallbackMapSrc(encodedAddressQuery) {
+    var geo = (CONFIG.business && CONFIG.business.geo) || {};
+    var lat = parseFloat(geo.lat);
+    var lng = parseFloat(geo.lng);
+    if (isFinite(lat) && isFinite(lng)) {
+      return "https://www.google.com/maps?q=" + lat + "," + lng + "&output=embed";
+    }
+    return "https://www.google.com/maps?q=" + encodedAddressQuery + "&output=embed";
+  }
+
   function renderHours() {
     var h = CONFIG.hours || {};
     var contact = CONFIG.contact || {};
@@ -605,9 +625,7 @@
     var query = encodeURIComponent(h.mapQuery || fullAddress);
     var mapFrame = document.getElementById("map-iframe");
     if (mapFrame) {
-      // Prefer a real embed URL grabbed from Google Maps (Share > Embed a
-      // map) — it points at the exact place instead of a generic area pin.
-      mapFrame.src = h.mapEmbedSrc || ("https://www.google.com/maps?q=" + query + "&output=embed");
+      mapFrame.src = h.mapEmbedSrc || buildFallbackMapSrc(query);
     }
 
     var directions = document.getElementById("hours-directions");
@@ -890,6 +908,35 @@
   }
 
   /* ---------------------------------------------------------------------
+     16b. Nav scroll-spy — highlights the nav link for whichever section
+     is currently crossing the vertical center of the viewport.
+     --------------------------------------------------------------------- */
+  function wireNavScrollSpy() {
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('#nav-links a[href^="#"]'));
+    if (!navLinks.length || !("IntersectionObserver" in window)) return;
+
+    var linkByTargetId = {};
+    navLinks.forEach(function (a) {
+      var id = a.getAttribute("href");
+      if (id && id.length > 1) linkByTargetId[id.slice(1)] = a;
+    });
+
+    var targets = Object.keys(linkByTargetId)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+    if (!targets.length) return;
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var link = linkByTargetId[entry.target.id];
+        if (link) link.classList.toggle("is-active", entry.isIntersecting);
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  /* ---------------------------------------------------------------------
      17. Scroll-reveal animations
      --------------------------------------------------------------------- */
   function wireScrollReveal() {
@@ -934,6 +981,7 @@
     wireScrollEffects();
     wireMobileNav();
     wireSmoothScroll();
+    wireNavScrollSpy();
     wireScrollReveal();
     wireStatCounters();
   }

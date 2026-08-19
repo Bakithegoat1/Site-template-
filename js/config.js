@@ -57,10 +57,14 @@ window.SITE_CONFIG = {
     // or "Electrician" for a single-trade shop, or the broader
     // "HomeAndConstructionBusiness" (used here) for a multi-trade business.
     schemaType: "HomeAndConstructionBusiness",
-    // Exact coordinates for the JSON-LD "geo" property (right-click the
-    // business's pin in Google Maps → the lat/lng shown at the top of the
-    // context menu). Left blank, "geo" is simply omitted from the
-    // structured data rather than shipping a made-up location.
+    // Exact coordinates (right-click the business's pin in Google Maps →
+    // the lat/lng shown at the top of the context menu). Used for the
+    // JSON-LD "geo" property, AND as the map embed fallback below when
+    // hours.mapEmbedSrc is blank — a coordinate pin is exact regardless of
+    // whether the address text geocodes cleanly, so fill this in even if
+    // you're not pasting a full mapEmbedSrc. Left blank, "geo" is simply
+    // omitted from the structured data rather than shipping a made-up
+    // location.
     geo: {
       lat: "[LATITUDE]",
       lng: "[LONGITUDE]"
@@ -248,13 +252,23 @@ window.SITE_CONFIG = {
       { days: ["Saturday"], opens: "08:00", closes: "16:00" }
     ],
     emergencyNote: "Emergencies? [EMERGENCY_AVAILABILITY].",
-    // Plain-text address used as a fallback map search if mapEmbedSrc (below)
-    // is empty. Also feeds "Get Directions" and the footer/contact address.
+    // Plain-text address, used two ways: (1) feeds "Get Directions" and the
+    // footer/contact address always; (2) as the last-resort map fallback,
+    // only if BOTH mapEmbedSrc and business.geo below are left empty.
     mapQuery: "482 Maple Ridge Road, Asheville, NC 28801",
-    // Preferred: paste the real src URL from Google Maps → Share → Embed a
-    // map → copy HTML → grab the iframe's src="...". That points at the
-    // exact business location instead of a generic area/zip-code pin.
-    // Leave "" to fall back to a best-effort search built from mapQuery.
+    // The map picks the first of these three that's filled in, in order:
+    //   1. mapEmbedSrc (this field) — paste the real src URL from Google
+    //      Maps → Share → Embed a map → copy HTML → grab the iframe's
+    //      src="...". The only option that can show reviews/business info,
+    //      not just a pin.
+    //   2. business.geo.lat/lng above — drops an exact pin at those
+    //      coordinates. Reliable even for a brand-new listing Google
+    //      hasn't fully indexed yet.
+    //   3. mapQuery above — a plain-text address search. Works for any
+    //      real, geocodable address, but a fictional or not-yet-listed
+    //      one (like this template's placeholder default) resolves only
+    //      to the city/zip level, not a street pin.
+    // Leave "" to skip straight to option 2, or 3 if that's empty too.
     mapEmbedSrc: ""
   },
 
@@ -290,32 +304,41 @@ window.SITE_CONFIG = {
     map: true
   },
 
-  // A light monochrome system: everything is grayscale (text/textMuted/
-  // bg/bgAlt/border) except a single accent used only for buttons, links,
-  // and small highlights (eyebrows, stat numbers, icon glyphs, focus
-  // rings). To re-brand a client onto this template, in almost every case
-  // you only need to touch three fields:
-  //   - accent:      the client's brand color. Works dark, vivid, or
-  //                  muted — accent never sits directly on a dark
-  //                  section background (those invert text/bg instead),
-  //                  so contrast holds up regardless of the shade chosen.
+  // Quietly colorful, not strictly monochrome: warm off-white backgrounds
+  // and warm (not pure neutral) gray text, plus a real muted-but-saturated
+  // accent that does visible work — eyebrow labels, icon fills, link
+  // underlines, the active nav item, stat numbers, focus rings — not just
+  // buttons. To re-brand a client onto this template, in almost every
+  // case you only need to touch three fields:
+  //   - accent:      the client's brand color. A calm, muted-but-saturated
+  //                  color reads best (deep teal, terracotta, muted blue)
+  //                  rather than something near-black or neon — but any
+  //                  shade works: accent never sits directly on a dark
+  //                  section background as foreground text/icons (those
+  //                  invert text/bg instead), so contrast holds up
+  //                  regardless of the shade chosen.
   //   - accentHover: a hover/active shade of accent (usually a bit darker).
   //   - accentText:  the text/icon color placed ON TOP of solid accent
   //                  buttons — "#FFFFFF" for a dark or vivid accent,
   //                  something like "#111111" if a client's accent is
   //                  itself very light/pale.
-  // The rest (text/textMuted/bg/bgAlt/border) define the grayscale scale
-  // and rarely need to change — only touch them for a client who wants a
-  // warmer/cooler gray instead of true neutral.
+  // accentSoft is a light wash of accent (card/icon-tile backgrounds,
+  // hover states) — leave it unset and it's auto-derived from accent via
+  // CSS color-mix(), so it updates for free whenever accent changes.
+  // Only set it explicitly if a client wants a specific tint instead.
+  // The rest (text/textMuted/bg/bgAlt/border) define the warm neutral
+  // scale and rarely need to change — only touch them for a client who
+  // wants a cooler/more neutral gray instead of this template's warmth.
   colors: {
-    accent: "#2A2A2A",
-    accentHover: "#000000",
+    accent: "#2E6659",
+    accentHover: "#234F45",
     accentText: "#FFFFFF",
-    text: "#111111",
-    textMuted: "#555555",
-    bg: "#FFFFFF",
-    bgAlt: "#F7F7F7",
-    border: "#E5E5E5",
+    // accentSoft: "",   // uncomment to override the auto-derived tint
+    text: "#1C1916",
+    textMuted: "#5C5650",
+    bg: "#FFFEFB",
+    bgAlt: "#F7F2EA",
+    border: "#E6DFD3",
     // Functional feedback colors for the contact form's success/error
     // messages — independent of the accent system above.
     success: "#3F8F5F",
