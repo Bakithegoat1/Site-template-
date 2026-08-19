@@ -46,6 +46,8 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 200ms;
   --dur-med: 320ms;
+  --dur-hover: 250ms;   /* card lift / image scale hover feedback */
+  --dur-reveal: 450ms;  /* scroll-reveal fade + translate */
 
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.10);
@@ -143,8 +145,8 @@ textarea:focus-visible,
 /* -------------------------------------------------------------------- */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity var(--dur-med) var(--ease), transform var(--dur-med) var(--ease);
+  transform: translateY(20px);
+  transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease);
   will-change: opacity, transform;
 }
 .reveal.is-visible {
@@ -229,13 +231,23 @@ textarea:focus-visible,
   display: flex;
   align-items: center;
   background: transparent;
-  transition: background-color var(--dur-med) var(--ease), box-shadow var(--dur-med) var(--ease), height var(--dur-med) var(--ease);
 }
-.site-header.is-scrolled {
-  background: color-mix(in srgb, var(--color-bg) 90%, transparent);
-  backdrop-filter: blur(14px) saturate(1.4);
-  box-shadow: 0 1px 0 rgba(0,0,0,0.06), var(--shadow-sm);
-  height: 72px;
+/* Solid background + hairline border crossfade in as a layer behind the
+   header content, so the scrolled/unscrolled swap animates opacity only
+   (no background-color, height, or backdrop-filter animation). */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease);
+}
+.site-header.is-scrolled::before {
+  opacity: 1;
 }
 
 .header-inner {
@@ -475,10 +487,10 @@ textarea:focus-visible,
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 36px 30px;
-  transition: transform var(--dur-med) var(--ease), box-shadow var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease);
+  transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease), border-color var(--dur-hover) var(--ease);
 }
 .service-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-md);
   border-color: transparent;
 }
@@ -555,7 +567,7 @@ textarea:focus-visible,
 .gallery-item img {
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform var(--dur-med) var(--ease), filter var(--dur-med) var(--ease);
+  transition: transform var(--dur-hover) var(--ease);
 }
 .gallery-item::after {
   content: "";
@@ -564,7 +576,7 @@ textarea:focus-visible,
   opacity: 0;
   transition: opacity var(--dur-fast) var(--ease);
 }
-.gallery-item:hover img { transform: scale(1.08); }
+.gallery-item:hover img { transform: scale(1.03); }
 .gallery-item:hover::after { opacity: 1; }
 
 .lightbox {
@@ -637,7 +649,7 @@ textarea:focus-visible,
   flex-direction: column;
   gap: 18px;
   backdrop-filter: blur(6px);
-  transition: transform var(--dur-med) var(--ease), background-color var(--dur-med) var(--ease);
+  transition: transform var(--dur-hover) var(--ease), background-color var(--dur-hover) var(--ease);
 }
 .testimonial-card:hover { transform: translateY(-4px); background: color-mix(in srgb, var(--color-bg) 8%, transparent); }
 .testimonial-stars { color: var(--color-bg); letter-spacing: 2px; font-size: 0.95rem; }
@@ -667,6 +679,13 @@ textarea:focus-visible,
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: 48px;
   align-items: stretch;
+}
+/* Applied by main.js when sections.map is false — collapses the empty
+   second grid track instead of leaving a blank gap where the map was. */
+.hours-inner.no-map {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 640px;
+  margin: 0 auto;
 }
 .hours-panel {
   background: var(--color-bg-alt);
@@ -709,6 +728,7 @@ textarea:focus-visible,
   min-height: 340px;
   box-shadow: var(--shadow-sm);
 }
+.map-panel iframe { filter: grayscale(1); }
 
 /* -------------------------------------------------------------------- */
 /* Contact                                                              */

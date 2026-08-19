@@ -273,6 +273,23 @@ window.SITE_CONFIG = {
     quoteLabel: "Free Quote"
   },
 
+  // Per-section on/off switches. Set any flag to false to drop that
+  // section entirely — its nav link, footer link, and layout spacing all
+  // disappear with it, no leftover gap. Omitted keys default to true, so
+  // this whole object can be left out for a client who wants everything.
+  //   gallery/testimonials/about/hours — hide the whole section.
+  //   stats — hides just the stat row inside About (About itself stays).
+  //   map   — hides just the map embed inside Hours (hours-panel expands
+  //           to fill the space instead of leaving a blank column).
+  sections: {
+    gallery: true,
+    testimonials: true,
+    stats: true,
+    about: true,
+    hours: true,
+    map: true
+  },
+
   // A light monochrome system: everything is grayscale (text/textMuted/
   // bg/bgAlt/border) except a single accent used only for buttons, links,
   // and small highlights (eyebrows, stat numbers, icon glyphs, focus

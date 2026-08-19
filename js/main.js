@@ -40,7 +40,7 @@
 
   function icon(name, extraClass) {
     var cls = "icon" + (extraClass ? " " + extraClass : "");
-    return '<svg class="' + cls + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    return '<svg class="' + cls + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" ' +
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       (ICONS[name] || ICONS["shield-alert"]) + '</svg>';
   }
@@ -50,7 +50,7 @@
     if (!def) return "";
     var attrs = def.fill
       ? 'fill="currentColor"'
-      : 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+      : 'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
     return '<svg class="icon" viewBox="0 0 24 24" ' + attrs + ' aria-hidden="true">' + def.svg + '</svg>';
   }
 
@@ -89,6 +89,53 @@
   function setHTML(id, html) {
     var node = document.getElementById(id);
     if (node) node.innerHTML = html;
+  }
+
+  function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  /* ---------------------------------------------------------------------
+     0. Section toggles (config.js "sections" flags)
+     -------------------------------------------------------------------
+     Removes disabled sections from the DOM before anything renders into
+     them, so nav links (derived from which #anchor targets still exist),
+     footer links, and the render* functions below all just naturally
+     skip what isn't there — no leftover spacing, no dangling nav item.
+     --------------------------------------------------------------------- */
+  function sectionEnabled(key) {
+    var s = CONFIG.sections || {};
+    return s[key] !== false;
+  }
+
+  function applySectionVisibility() {
+    ["gallery", "testimonials", "about", "hours"].forEach(function (key) {
+      if (!sectionEnabled(key)) {
+        var node = document.getElementById(key);
+        if (node) node.remove();
+      }
+    });
+
+    if (sectionEnabled("about") && !sectionEnabled("stats")) {
+      var statsNode = document.getElementById("about-stats");
+      if (statsNode) statsNode.remove();
+    }
+
+    if (sectionEnabled("hours") && !sectionEnabled("map")) {
+      var mapPanel = document.querySelector(".map-panel");
+      if (mapPanel) mapPanel.remove();
+      var hoursInner = document.querySelector(".hours-inner");
+      if (hoursInner) hoursInner.classList.add("no-map");
+    }
+  }
+
+  // A nav/footer link stays visible only if its #anchor target is still
+  // in the DOM (or it isn't a same-page anchor at all).
+  function visibleLinks(links) {
+    return (links || []).filter(function (l) {
+      if (!l.href || l.href.charAt(0) !== "#" || l.href.length < 2) return true;
+      return !!document.querySelector(l.href);
+    });
   }
 
   /* ---------------------------------------------------------------------
@@ -262,7 +309,7 @@
 
     var linksEl = document.getElementById("nav-links");
     if (linksEl && nav.links) {
-      linksEl.innerHTML = nav.links.map(function (l) {
+      linksEl.innerHTML = visibleLinks(nav.links).map(function (l) {
         return '<li><a href="' + l.href + '">' + l.label + "</a></li>";
       }).join("");
     }
@@ -337,11 +384,92 @@
 
     var stats = document.getElementById("about-stats");
     if (stats && a.stats) {
-      stats.innerHTML = a.stats.map(function (st) {
-        return '<div class="stat"><span class="stat-number">' + st.number +
-          '</span><span class="stat-label">' + st.label + "</span></div>";
+      stats.innerHTML = a.stats.map(function (st, i) {
+        var target = parseStatTarget(st.number);
+        var dataAttrs = target
+          ? ' data-stat-target="' + target.value + '" data-stat-decimals="' + target.decimals +
+            '" data-stat-suffix="' + target.suffix.replace(/"/g, "&quot;") + '"'
+          : "";
+        var initial = target ? formatStatValue(target, 0) : (st.number || "");
+        return '<div class="stat reveal" style="transition-delay:' + (i % 4) * 80 + 'ms">' +
+          '<span class="stat-number"' + dataAttrs + '>' + initial + "</span>" +
+          '<span class="stat-label">' + st.label + "</span></div>";
       }).join("");
     }
+  }
+
+  // Parses a leading number out of a stat string (e.g. "500+" → 500 with
+  // suffix "+", "4.9" → 4.9 with 1 decimal, "24/7" → 24 with suffix "/7").
+  // Bracket placeholders like "[JOBS_COMPLETED]" have no leading digit and
+  // return null, so they render as static text instead of counting to 0.
+  function parseStatTarget(raw) {
+    var str = raw == null ? "" : String(raw).trim();
+    var match = /^(\d[\d,]*(?:\.\d+)?)/.exec(str);
+    if (!match) return null;
+    var numStr = match[1].replace(/,/g, "");
+    var value = parseFloat(numStr);
+    if (!isFinite(value)) return null;
+    return {
+      value: value,
+      decimals: (numStr.split(".")[1] || "").length,
+      suffix: str.slice(match[1].length)
+    };
+  }
+
+  function formatStatValue(target, current) {
+    var num = target.decimals
+      ? current.toFixed(target.decimals)
+      : Math.round(current).toLocaleString("en-US");
+    return num + target.suffix;
+  }
+
+  /* ---------------------------------------------------------------------
+     6b. Animated stat counters — count up from 0 once, the first time
+     each stat scrolls into view.
+     --------------------------------------------------------------------- */
+  function wireStatCounters() {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll(".stat-number[data-stat-target]"));
+    if (!nodes.length) return;
+
+    var reduceMotion = prefersReducedMotion();
+
+    function animate(el) {
+      var target = {
+        value: parseFloat(el.getAttribute("data-stat-target")),
+        decimals: parseInt(el.getAttribute("data-stat-decimals"), 10) || 0,
+        suffix: el.getAttribute("data-stat-suffix") || ""
+      };
+      if (reduceMotion) {
+        el.textContent = formatStatValue(target, target.value);
+        return;
+      }
+      var duration = 1400;
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = formatStatValue(target, target.value * eased);
+        if (progress < 1) window.requestAnimationFrame(step);
+      }
+      window.requestAnimationFrame(step);
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      nodes.forEach(animate);
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animate(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    nodes.forEach(function (n) { io.observe(n); });
   }
 
   /* ---------------------------------------------------------------------
@@ -435,7 +563,7 @@
       var dot = e.target.closest(".dot");
       if (!dot) return;
       var idx = parseInt(dot.getAttribute("data-index"), 10);
-      cards[idx].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      cards[idx].scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", inline: "start", block: "nearest" });
     });
 
     if ("IntersectionObserver" in window) {
@@ -637,7 +765,7 @@
 
     var linksList = document.getElementById("footer-links-list");
     if (linksList && nav.links) {
-      linksList.innerHTML = nav.links.map(function (l) {
+      linksList.innerHTML = visibleLinks(nav.links).map(function (l) {
         return "<li><a href=\"" + l.href + "\">" + l.label + "</a></li>";
       }).join("");
     }
@@ -698,7 +826,7 @@
 
     function update() {
       var y = window.scrollY || window.pageYOffset;
-      header.classList.toggle("is-scrolled", y > 24);
+      header.classList.toggle("is-scrolled", y > 80);
       backToTop.classList.toggle("is-visible", y > 600);
       ticking = false;
     }
@@ -714,7 +842,7 @@
     update();
 
     backToTop.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
     });
   }
 
@@ -757,7 +885,7 @@
       var header = document.getElementById("site-header");
       var offset = header ? header.offsetHeight : 0;
       var top = target.getBoundingClientRect().top + window.pageYOffset - offset - 12;
-      window.scrollTo({ top: top, behavior: "smooth" });
+      window.scrollTo({ top: top, behavior: prefersReducedMotion() ? "auto" : "smooth" });
     });
   }
 
@@ -787,6 +915,7 @@
      --------------------------------------------------------------------- */
   function init() {
     applyColors();
+    applySectionVisibility();
     renderMeta();
     renderStructuredData();
     renderHeader();
@@ -806,6 +935,7 @@
     wireMobileNav();
     wireSmoothScroll();
     wireScrollReveal();
+    wireStatCounters();
   }
 
   if (document.readyState === "loading") {
