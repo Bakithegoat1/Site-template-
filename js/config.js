@@ -91,16 +91,14 @@ window.SITE_CONFIG = {
     // placeholder is replaced with a real endpoint.
     formEndpoint: "[FORMSPREE_ENDPOINT]",
     formSuccessMessage: "Thanks — your request has been received! A member of our team will reach out within one business hour.",
-    formErrorMessage: "Something went wrong sending your request. Please try again, or call us directly.",
-    services: [
-      "Plumbing Repair",
-      "Drain & Sewer Cleaning",
-      "Water Heater Service",
-      "Electrical Services",
-      "HVAC Repair & Install",
-      "Emergency Repair",
-      "Something Else"
-    ]
+    // The business phone is always appended automatically as a fallback
+    // when this shows, so it doesn't need to be repeated here.
+    formErrorMessage: "Something went wrong sending your request. Please try again,",
+    // The "Service Needed" dropdown is NOT set here — it's generated
+    // automatically from services.items below, so the two lists can never
+    // drift out of sync. otherServiceLabel adds one extra catch-all option
+    // at the end for anything not on that list; set "" to omit it.
+    otherServiceLabel: "Something Else"
   },
 
   social: {

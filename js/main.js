@@ -25,7 +25,8 @@
     "shield-alert": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.79 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
     phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
     mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
-    "map-pin": '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>'
+    "map-pin": '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>'
   };
 
   // Brand marks aren't in Lucide (it deliberately excludes company logos), so
@@ -656,8 +657,13 @@
     renderSocialLinks("footer-social-links");
 
     var select = document.getElementById("cf-service");
-    var serviceOptions = (CONFIG.contact && CONFIG.contact.services) || [];
     if (select) {
+      // Sourced from services.items (not a separately hand-maintained
+      // list) so the dropdown can never drift out of sync with the real
+      // service offerings shown in the Services section.
+      var serviceItems = (CONFIG.services && CONFIG.services.items) || [];
+      var serviceOptions = serviceItems.map(function (item) { return item.title; });
+      if (c.otherServiceLabel) serviceOptions.push(c.otherServiceLabel);
       select.innerHTML = '<option value="" disabled selected>Select a service...</option>' +
         serviceOptions.map(function (s) { return '<option value="' + s + '">' + s + "</option>"; }).join("");
     }
@@ -689,9 +695,56 @@
     set("contact-subheading", cc.subheading || "");
   }
 
+  // Friendly per-field message, read off the native constraint-validation
+  // API (field.validity) without ever triggering the browser's own bubble.
+  function fieldErrorMessage(field) {
+    var v = field.validity;
+    if (v.valueMissing) return "This field is required.";
+    if (v.typeMismatch && field.type === "email") return "Enter a valid email address.";
+    if (v.typeMismatch && field.type === "tel") return "Enter a valid phone number.";
+    if (v.tooShort) return "Please enter at least " + field.minLength + " characters.";
+    return "Please check this field.";
+  }
+
+  function showFieldError(field) {
+    var msgEl = document.getElementById(field.id + "-error");
+    if (msgEl) msgEl.textContent = fieldErrorMessage(field);
+    field.classList.add("is-invalid");
+  }
+
+  function clearFieldError(field) {
+    var msgEl = document.getElementById(field.id + "-error");
+    if (msgEl) msgEl.textContent = "";
+    field.classList.remove("is-invalid");
+  }
+
+  // Wires per-field inline validation (minimal text under the field, no
+  // native browser bubble) and returns the list of validated fields.
+  function wireInlineValidation(form) {
+    var fields = Array.prototype.slice.call(form.querySelectorAll("input, select, textarea"))
+      .filter(function (f) { return f.name !== "_gotcha"; });
+
+    fields.forEach(function (field) {
+      // The default action of "invalid" is the native bubble — prevent
+      // that, then render our own message from the same validity state.
+      field.addEventListener("invalid", function (e) {
+        e.preventDefault();
+        showFieldError(field);
+      });
+      field.addEventListener("input", function () {
+        if (field.classList.contains("is-invalid") && field.checkValidity()) clearFieldError(field);
+      });
+      field.addEventListener("change", function () {
+        if (field.checkValidity()) clearFieldError(field);
+      });
+    });
+
+    return fields;
+  }
+
   function wireForm() {
     var form = document.getElementById("contact-form");
-    var success = document.getElementById("form-success");
+    var confirmation = document.getElementById("form-confirmation");
     var errorEl = document.getElementById("form-error");
     var subjectField = document.getElementById("cf-subject");
     if (!form) return;
@@ -701,36 +754,61 @@
       subjectField.value = "New quote request — " + ((CONFIG.business && CONFIG.business.name) || "website");
     }
 
-    function hide(el) { if (el) el.classList.remove("is-visible"); }
+    wireInlineValidation(form);
 
-    function showSuccess() {
-      hide(errorEl);
-      success.textContent = cc.formSuccessMessage || "Thanks — we'll be in touch shortly.";
-      success.classList.add("is-visible");
-      setTimeout(function () { success.classList.remove("is-visible"); }, 8000);
+    var submitBtn = form.querySelector(".form-submit");
+    var submitLabel = submitBtn.querySelector(".btn-label");
+    var defaultLabel = submitLabel.textContent;
+
+    function setLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      submitLabel.textContent = isLoading ? "Sending…" : defaultLabel;
     }
 
+    function hideError() { errorEl.classList.remove("is-visible"); }
+
+    // Replaces the form with a clean confirmation instead of just showing
+    // a message next to it — the user's job here is done, so the form
+    // (and its now-stale "submit again?" affordance) shouldn't linger.
+    function showSuccess() {
+      hideError();
+      form.hidden = true;
+      confirmation.innerHTML =
+        '<div class="form-confirmation-icon">' + icon("check") + "</div>" +
+        "<h3>Request received</h3>" +
+        "<p>" + (cc.formSuccessMessage || "Thanks — we'll be in touch shortly.") + "</p>";
+      confirmation.hidden = false;
+      confirmation.focus();
+    }
+
+    // Preserves whatever the user already typed (no form.reset() here)
+    // and always surfaces the business phone as a fallback so a failed
+    // submission never becomes a dead end.
     function showError(customMessage) {
-      hide(success);
-      errorEl.textContent = customMessage || cc.formErrorMessage || "Something went wrong — please try again or call us directly.";
+      var base = customMessage || cc.formErrorMessage || "Something went wrong sending your request. Please try again,";
+      var phoneLink = cc.phoneHref
+        ? ' or call us at <a href="tel:' + cc.phoneHref + '">' + (cc.phoneDisplay || cc.phoneHref) + "</a>."
+        : "";
+      errorEl.innerHTML = base + phoneLink;
       errorEl.classList.add("is-visible");
     }
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      hideError();
+
+      // Fires "invalid" (caught above) on every invalid field, rendering
+      // inline messages, without ever showing the native bubble UI.
       if (!form.checkValidity()) {
-        form.reportValidity();
+        var firstInvalid = form.querySelector(".is-invalid");
+        if (firstInvalid) firstInvalid.focus();
         return;
       }
-
-      hide(success);
-      hide(errorEl);
 
       // Honeypot: real users never fill this in. If it's filled, quietly
       // drop the submission (fake success) instead of hitting the endpoint.
       var honeypot = form.querySelector('[name="_gotcha"]');
       if (honeypot && honeypot.value) {
-        form.reset();
         showSuccess();
         return;
       }
@@ -741,26 +819,21 @@
         return;
       }
 
-      var btn = form.querySelector(".form-submit");
-      btn.classList.add("is-loading");
-      btn.disabled = true;
+      setLoading(true);
 
       fetch(endpoint, {
         method: "POST",
         headers: { Accept: "application/json" },
         body: new FormData(form)
       }).then(function (res) {
-        btn.classList.remove("is-loading");
-        btn.disabled = false;
+        setLoading(false);
         if (res.ok) {
-          form.reset();
           showSuccess();
         } else {
           showError();
         }
       }).catch(function () {
-        btn.classList.remove("is-loading");
-        btn.disabled = false;
+        setLoading(false);
         showError();
       });
     });
