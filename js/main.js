@@ -98,16 +98,13 @@
     var c = CONFIG.colors || {};
     var root = document.documentElement.style;
     var map = {
-      primary: "--color-primary",
-      primaryDark: "--color-primary-dark",
-      primaryLight: "--color-primary-light",
       accent: "--color-accent",
-      accentLight: "--color-accent-light",
-      dark: "--color-dark",
-      light: "--color-light",
-      surface: "--color-surface",
+      accentHover: "--color-accent-hover",
+      accentText: "--color-accent-text",
       text: "--color-text",
       textMuted: "--color-text-muted",
+      bg: "--color-bg",
+      bgAlt: "--color-bg-alt",
       border: "--color-border",
       success: "--color-success",
       error: "--color-error"

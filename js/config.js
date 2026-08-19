@@ -273,18 +273,34 @@ window.SITE_CONFIG = {
     quoteLabel: "Free Quote"
   },
 
+  // A light monochrome system: everything is grayscale (text/textMuted/
+  // bg/bgAlt/border) except a single accent used only for buttons, links,
+  // and small highlights (eyebrows, stat numbers, icon glyphs, focus
+  // rings). To re-brand a client onto this template, in almost every case
+  // you only need to touch three fields:
+  //   - accent:      the client's brand color. Works dark, vivid, or
+  //                  muted — accent never sits directly on a dark
+  //                  section background (those invert text/bg instead),
+  //                  so contrast holds up regardless of the shade chosen.
+  //   - accentHover: a hover/active shade of accent (usually a bit darker).
+  //   - accentText:  the text/icon color placed ON TOP of solid accent
+  //                  buttons — "#FFFFFF" for a dark or vivid accent,
+  //                  something like "#111111" if a client's accent is
+  //                  itself very light/pale.
+  // The rest (text/textMuted/bg/bgAlt/border) define the grayscale scale
+  // and rarely need to change — only touch them for a client who wants a
+  // warmer/cooler gray instead of true neutral.
   colors: {
-    primary: "#173B4A",
-    primaryDark: "#0D242E",
-    primaryLight: "#2B5568",
-    accent: "#C4923D",
-    accentLight: "#E0B36A",
-    dark: "#12181B",
-    light: "#F7F5F0",
-    surface: "#FFFFFF",
-    text: "#242C31",
-    textMuted: "#5C6870",
-    border: "#E7E2D8",
+    accent: "#2A2A2A",
+    accentHover: "#000000",
+    accentText: "#FFFFFF",
+    text: "#111111",
+    textMuted: "#555555",
+    bg: "#FFFFFF",
+    bgAlt: "#F7F7F7",
+    border: "#E5E5E5",
+    // Functional feedback colors for the contact form's success/error
+    // messages — independent of the accent system above.
     success: "#3F8F5F",
     error: "#C0392B"
   }
