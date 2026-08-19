@@ -14,6 +14,20 @@
 </head>
 <body>
 
+<!-- This entire page is rendered from js/config.js at runtime, so with
+     JavaScript disabled every section below is empty. Rather than leave a
+     visitor staring at a wall of blank/empty sections, hide all of it and
+     show one clear, honest notice instead. -->
+<noscript>
+  <style>body > *:not(.noscript-notice) { display: none !important; }</style>
+  <div class="noscript-notice">
+    <div class="container">
+      <h1>JavaScript Required</h1>
+      <p class="section-sub">This page loads its content dynamically and needs JavaScript enabled in your browser to display.</p>
+    </div>
+  </div>
+</noscript>
+
 <a href="#home" class="skip-link">Skip to main content</a>
 
 <!-- ============================= NAV ============================= -->
@@ -116,6 +130,17 @@
         <div class="testimonials-track" id="testimonials-track"></div>
         <div class="testimonials-dots" id="testimonials-dots"></div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============================= FAQ ============================= -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" id="faq-eyebrow"></p>
+        <h2 id="faq-heading"></h2>
+      </div>
+      <div class="faq-list" id="faq-list"></div>
     </div>
   </section>
 

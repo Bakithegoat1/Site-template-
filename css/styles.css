@@ -683,6 +683,52 @@ textarea:focus-visible,
 .dot.is-active { background: var(--color-bg); transform: scale(1.3); }
 
 /* -------------------------------------------------------------------- */
+/* FAQ (accessible accordion)                                           */
+/* -------------------------------------------------------------------- */
+.faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--dur-hover) var(--ease);
+}
+.faq-item.is-open { border-color: var(--color-accent); }
+.faq-question { margin: 0; }
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.faq-icon {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  color: var(--color-accent);
+  transition: transform var(--dur-hover) var(--ease);
+}
+.faq-item.is-open .faq-icon { transform: rotate(180deg); }
+/* Grid-rows trick animates to an unknown content height without JS
+   measuring pixels — 0fr collapses, 1fr reveals, both transitionable. */
+.faq-panel-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-med) var(--ease);
+}
+.faq-item.is-open .faq-panel-wrap { grid-template-rows: 1fr; }
+.faq-panel { overflow: hidden; }
+.faq-panel p { padding: 0 24px 20px; color: var(--color-text-muted); line-height: 1.6; }
+
+/* -------------------------------------------------------------------- */
 /* Hours + Map                                                          */
 /* -------------------------------------------------------------------- */
 .hours-inner {
@@ -800,7 +846,6 @@ textarea:focus-visible,
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  outline: none;
   border-color: var(--color-accent);
   background: var(--color-bg);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 15%, transparent);
@@ -970,6 +1015,10 @@ body.page-404 .notfound-section {
 .notfound-inner { max-width: 560px; margin: 0 auto; text-align: center; }
 .notfound-inner h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 16px; }
 .notfound-inner .section-sub { margin-bottom: 32px; }
+
+.noscript-notice { padding: 120px 24px; text-align: center; }
+.noscript-notice h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); margin-bottom: 16px; }
+.noscript-notice .section-sub { max-width: 480px; margin: 0 auto; }
 /* Elsewhere, the transparent/light-text header state relies on sitting
    over the dark .hero — this page has no hero underneath it, so force
    the solid, dark-text header state regardless of scroll position. */

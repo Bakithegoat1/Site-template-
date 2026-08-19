@@ -26,7 +26,8 @@
     phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
     mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
     "map-pin": '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
-    check: '<path d="M20 6 9 17l-5-5"/>'
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    "chevron-down": '<path d="m6 9 6 6 6-6"/>'
   };
 
   // Brand marks aren't in Lucide (it deliberately excludes company logos), so
@@ -80,7 +81,7 @@
     if (!node) return;
     if (logoImage) {
       node.classList.add("brand-mark--image");
-      node.innerHTML = '<img src="' + logoImage + '" alt="' + (name || "") + ' logo" loading="lazy">';
+      node.innerHTML = '<img src="' + logoImage + '" alt="' + (name || "") + ' logo" width="40" height="40" loading="lazy">';
     } else {
       node.classList.remove("brand-mark--image");
       node.textContent = initials || "";
@@ -110,7 +111,7 @@
   }
 
   function applySectionVisibility() {
-    ["gallery", "testimonials", "about", "hours"].forEach(function (key) {
+    ["gallery", "testimonials", "faq", "about", "hours"].forEach(function (key) {
       if (!sectionEnabled(key)) {
         var node = document.getElementById(key);
         if (node) node.remove();
@@ -538,7 +539,7 @@
     grid.innerHTML = g.images.map(function (im, i) {
       return (
         '<button type="button" class="gallery-item reveal" style="transition-delay:' + (i % 3) * 80 + 'ms" data-full="' + im.src + '" data-alt="' + im.alt + '" aria-label="View larger photo: ' + im.alt + '">' +
-          '<img src="' + im.src + '" alt="' + im.alt + '" loading="lazy">' +
+          '<img src="' + im.src + '" alt="' + im.alt + '" width="800" height="600" loading="lazy">' +
         "</button>"
       );
     }).join("");
@@ -637,6 +638,78 @@
      --------------------------------------------------------------------- */
   // Used only when hours.mapEmbedSrc (a real URL pasted from Google Maps'
   // own Share > Embed a map dialog) is left blank. Coordinates pin an
+  /* ---------------------------------------------------------------------
+     8b. FAQ (accessible accordion) + FAQPage JSON-LD
+     --------------------------------------------------------------------- */
+  function renderFAQ() {
+    var f = CONFIG.faq || {};
+    set("faq-eyebrow", f.eyebrow || "");
+    set("faq-heading", f.heading || "");
+
+    var list = document.getElementById("faq-list");
+    if (!list || !f.items || !f.items.length) return;
+
+    list.innerHTML = f.items.map(function (item, i) {
+      var triggerId = "faq-trigger-" + i;
+      var panelId = "faq-panel-" + i;
+      return (
+        '<div class="faq-item reveal" style="transition-delay:' + (i % 4) * 80 + 'ms">' +
+          '<h3 class="faq-question">' +
+            '<button type="button" class="faq-trigger" id="' + triggerId + '" aria-expanded="false" aria-controls="' + panelId + '">' +
+              "<span>" + item.question + "</span>" +
+              icon("chevron-down", "faq-icon") +
+            "</button>" +
+          "</h3>" +
+          '<div class="faq-panel-wrap">' +
+            '<div class="faq-panel" id="' + panelId + '" role="region" aria-labelledby="' + triggerId + '" aria-hidden="true">' +
+              "<p>" + item.answer + "</p>" +
+            "</div>" +
+          "</div>" +
+        "</div>"
+      );
+    }).join("");
+
+    list.addEventListener("click", function (e) {
+      var trigger = e.target.closest(".faq-trigger");
+      if (!trigger) return;
+      var item = trigger.closest(".faq-item");
+      var panel = document.getElementById(trigger.getAttribute("aria-controls"));
+      var isOpen = trigger.getAttribute("aria-expanded") === "true";
+      trigger.setAttribute("aria-expanded", String(!isOpen));
+      if (panel) panel.setAttribute("aria-hidden", String(isOpen));
+      if (item) item.classList.toggle("is-open", !isOpen);
+    });
+  }
+
+  // Emits schema.org FAQPage JSON-LD so Google can show questions directly
+  // in search results. Separate script tag from the LocalBusiness one
+  // above — only rendered when the FAQ section itself is present.
+  function renderFAQStructuredData() {
+    var f = CONFIG.faq || {};
+    if (!document.getElementById("faq") || !f.items || !f.items.length) return;
+
+    var data = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: f.items.map(function (item) {
+        return {
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer }
+        };
+      })
+    };
+
+    var script = document.getElementById("ld-json-faq");
+    if (!script) {
+      script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.id = "ld-json-faq";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(data, null, 2);
+  }
+
   // exact point regardless of whether the address text can be geocoded,
   // so they're preferred over a text search — a fictional/unlisted
   // address (as ships in this template by default) geocodes only to the
@@ -1003,19 +1076,57 @@
     var nav = document.getElementById("main-nav");
     if (!toggle || !nav) return;
 
+    function focusableInNav() {
+      return Array.prototype.slice.call(nav.querySelectorAll("a[href]"));
+    }
+
+    function openMenu() {
+      nav.classList.add("is-open");
+      toggle.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+      document.body.classList.add("no-scroll");
+      var focusable = focusableInNav();
+      if (focusable.length) focusable[0].focus();
+    }
+
+    function closeMenu(returnFocusToToggle) {
+      nav.classList.remove("is-open");
+      toggle.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("no-scroll");
+      if (returnFocusToToggle) toggle.focus();
+    }
+
     toggle.addEventListener("click", function () {
-      var isOpen = nav.classList.toggle("is-open");
-      toggle.classList.toggle("is-open", isOpen);
-      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      document.body.classList.toggle("no-scroll", isOpen);
+      if (nav.classList.contains("is-open")) closeMenu(false);
+      else openMenu();
     });
 
     nav.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") {
-        nav.classList.remove("is-open");
-        toggle.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-        document.body.classList.remove("no-scroll");
+      if (e.target.tagName === "A") closeMenu(false);
+    });
+
+    // Traps Tab/Shift+Tab within the open menu's links, and closes on
+    // Escape with focus returned to the toggle button that opened it.
+    nav.addEventListener("keydown", function (e) {
+      if (!nav.classList.contains("is-open")) return;
+
+      if (e.key === "Escape") {
+        closeMenu(true);
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+      var focusable = focusableInNav();
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     });
   }
@@ -1109,6 +1220,8 @@
     renderAbout();
     renderGallery();
     renderTestimonials();
+    renderFAQ();
+    renderFAQStructuredData();
     renderHours();
     renderContactCopy();
     renderContact();

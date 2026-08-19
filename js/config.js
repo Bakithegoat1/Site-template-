@@ -134,6 +134,7 @@ window.SITE_CONFIG = {
       { label: "About", href: "#about" },
       { label: "Gallery", href: "#gallery" },
       { label: "Reviews", href: "#testimonials" },
+      { label: "FAQ", href: "#faq" },
       { label: "Hours", href: "#hours" },
       { label: "Contact", href: "#contact" }
     ],
@@ -252,6 +253,33 @@ window.SITE_CONFIG = {
     ]
   },
 
+  faq: {
+    eyebrow: "Common Questions",
+    heading: "Frequently Asked Questions",
+    items: [
+      {
+        question: "Do you offer free estimates?",
+        answer: "Yes — we provide free, no-obligation estimates for most projects. Contact us to schedule yours."
+      },
+      {
+        question: "Are you licensed and insured?",
+        answer: "[LICENSE_INSURANCE_STATUS]."
+      },
+      {
+        question: "What areas do you serve?",
+        answer: "We proudly serve Asheville and the surrounding communities — see the \"Areas We Serve\" list in the footer for the full coverage area."
+      },
+      {
+        question: "How fast can you respond to an emergency?",
+        answer: "Emergencies? [EMERGENCY_AVAILABILITY]."
+      },
+      {
+        question: "What payment methods do you accept?",
+        answer: "[PAYMENT_METHODS_ACCEPTED]."
+      }
+    ]
+  },
+
   hours: {
     eyebrow: "Hours & Location",
     heading: "Stop By Or Give Us A Call",
@@ -320,13 +348,14 @@ window.SITE_CONFIG = {
   // section entirely — its nav link, footer link, and layout spacing all
   // disappear with it, no leftover gap. Omitted keys default to true, so
   // this whole object can be left out for a client who wants everything.
-  //   gallery/testimonials/about/hours — hide the whole section.
+  //   gallery/testimonials/faq/about/hours — hide the whole section.
   //   stats — hides just the stat row inside About (About itself stays).
   //   map   — hides just the map embed inside Hours (hours-panel expands
   //           to fill the space instead of leaving a blank column).
   sections: {
     gallery: true,
     testimonials: true,
+    faq: true,
     stats: true,
     about: true,
     hours: true,
