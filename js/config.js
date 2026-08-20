@@ -67,7 +67,7 @@ window.SITE_CONFIG = {
     // fall back to the colored initials tile above.
     logoImage: "",
     tagline: "Reliable Home Services You Can Actually Trust",
-    foundedYear: "[FOUNDED_YEAR]",
+    foundedYear: "2014",
     // schema.org type for the JSON-LD structured data. Use the most specific
     // type that still covers everything the business does — e.g. "Plumber"
     // or "Electrician" for a single-trade shop, or the broader
@@ -145,29 +145,29 @@ window.SITE_CONFIG = {
   hero: {
     eyebrow: "Asheville's Home Service Team",
     headline: "Reliable Home Services, Done Right the First Time",
-    subheadline: "Plumbing, electrical, and HVAC experts serving Asheville families since [FOUNDED_YEAR] — upfront pricing, licensed pros, and same-week appointments.",
+    subheadline: "Plumbing, electrical, and HVAC experts serving Asheville families since 2014 — upfront pricing, licensed pros, and same-week appointments.",
     primaryCtaLabel: "Get a Free Quote",
     primaryCtaHref: "#contact",
     secondaryCtaLabel: "Call (828) 214-7890",
     secondaryCtaHref: "tel:+18282147890",
-    ratingText: "[GOOGLE_RATING] from [REVIEW_COUNT]+ reviews",
-    image: "images/placeholder.svg",
-    imageAlt: "Placeholder — replace with a hero photo of your business, team, or completed work"
+    ratingText: "4.9 from 312+ reviews",
+    image: "images/hero.jpg",
+    imageAlt: "Technician servicing a rooftop commercial HVAC unit"
   },
 
   about: {
     eyebrow: "Why Homeowners Choose Us",
-    heading: "Built On Trust, Backed By [YEARS_IN_BUSINESS] Years Of Experience",
-    body: "Northstar Home Services started as a one-truck plumbing operation in [FOUNDED_YEAR] and has grown into a trusted home services team — without losing the personal touch. Every technician is background-checked, licensed, and trained to treat your home like their own. We show up on time, explain the problem in plain English, and give you an upfront price before any work begins.",
-    image: "images/placeholder.svg",
-    imageAlt: "Placeholder — replace with a photo of your team or business",
+    heading: "Built On Trust, Backed By 12+ Years Of Experience",
+    body: "Northstar Home Services started as a one-truck plumbing operation in 2014 and has grown into a trusted home services team — without losing the personal touch. Every technician is background-checked, licensed, and trained to treat your home like their own. We show up on time, explain the problem in plain English, and give you an upfront price before any work begins.",
+    image: "images/About.jpg",
+    imageAlt: "Technician inspecting a residential heat pump unit with a flashlight",
     // Every value below is a claim a real customer could ask you to prove.
     // Only put a real number here — never leave it looking like a finished stat.
     stats: [
-      { number: "[YEARS_IN_BUSINESS]", label: "Years in Business" },
-      { number: "[JOBS_COMPLETED]", label: "Jobs Completed" },
-      { number: "[CUSTOMER_REFERRAL_RATE]", label: "Customers Who Refer Us" },
-      { number: "[EMERGENCY_AVAILABILITY]", label: "Emergency Availability" }
+      { number: "12+", label: "Years in Business" },
+      { number: "3,200+", label: "Jobs Completed" },
+      { number: "78%", label: "Customers Who Refer Us" },
+      { number: "24/7", label: "Emergency Availability" }
     ]
   },
 
@@ -204,7 +204,7 @@ window.SITE_CONFIG = {
       {
         icon: "shield-alert",
         title: "Emergency Repairs",
-        description: "Burst pipe at midnight? We offer [EMERGENCY_AVAILABILITY] emergency response."
+        description: "Burst pipe at midnight? We offer 24/7 emergency response."
       }
     ]
   },
@@ -216,12 +216,12 @@ window.SITE_CONFIG = {
     // Add one object per photo. src can point anywhere (local file or URL);
     // alt should describe the actual photo once it replaces the placeholder.
     images: [
-      { src: "images/placeholder.svg", alt: "Placeholder — replace with a photo of completed work" },
-      { src: "images/placeholder.svg", alt: "Placeholder — replace with a photo of completed work" },
-      { src: "images/placeholder.svg", alt: "Placeholder — replace with a photo of completed work" },
-      { src: "images/placeholder.svg", alt: "Placeholder — replace with a photo of completed work" },
-      { src: "images/placeholder.svg", alt: "Placeholder — replace with a photo of completed work" },
-      { src: "images/placeholder.svg", alt: "Placeholder — replace with a photo of completed work" }
+      { src: "images/gallery1.jpg", alt: "Ductless mini-split air conditioning unit mounted on an exterior wall" },
+      { src: "images/gallery2.jpg", alt: "Technicians working among rooftop commercial air conditioning units" },
+      { src: "images/gallery3.jpg", alt: "Overhead HVAC ductwork and piping in a commercial ceiling" },
+      { src: "images/gallery4.jpg", alt: "Industrial boiler unit with a coal shovel hanging beside it" },
+      { src: "images/gallery5.jpg", alt: "Smart thermostat displaying the current temperature setting" },
+      { src: "images/gallery6.jpg", alt: "Close-up of hands adjusting a ceiling air vent" }
     ]
   },
 
@@ -271,7 +271,7 @@ window.SITE_CONFIG = {
       },
       {
         question: "How fast can you respond to an emergency?",
-        answer: "Emergencies? [EMERGENCY_AVAILABILITY]."
+        answer: "Emergencies? 24/7."
       },
       {
         question: "What payment methods do you accept?",
@@ -297,7 +297,7 @@ window.SITE_CONFIG = {
       { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "07:00", closes: "19:00" },
       { days: ["Saturday"], opens: "08:00", closes: "16:00" }
     ],
-    emergencyNote: "Emergencies? [EMERGENCY_AVAILABILITY].",
+    emergencyNote: "Emergencies? 24/7.",
     // Plain-text address, used two ways: (1) feeds "Get Directions" and the
     // footer/contact address always; (2) as the last-resort map fallback,
     // only if BOTH mapEmbedSrc and business.geo below are left empty.
@@ -330,7 +330,7 @@ window.SITE_CONFIG = {
   ],
 
   footer: {
-    tagline: "Locally owned and operated, serving Asheville since [FOUNDED_YEAR]. [LICENSE_INSURANCE_STATUS].",
+    tagline: "Locally owned and operated, serving Asheville since 2014. [LICENSE_INSURANCE_STATUS].",
     quickLinksHeading: "Quick Links",
     contactHeading: "Contact",
     hoursHeading: "Hours",
