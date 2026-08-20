@@ -131,7 +131,7 @@ window.SITE_CONFIG = {
     // look like "https://formspree.io/f/abcdwxyz". The form won't submit
     // (it shows a clear "not connected" error instead) until this bracket
     // placeholder is replaced with a real endpoint.
-    formEndpoint: "[FORMSPREE_ENDPOINT]",
+    formEndpoint: "https://formspree.io/f/xzepogdk",
     formSuccessMessage: "Thanks — your request has been received! A member of our team will reach out within one business hour.",
     // The business phone is always appended automatically as a fallback
     // when this shows, so it doesn't need to be repeated here.
