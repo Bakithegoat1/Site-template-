@@ -331,7 +331,11 @@ window.SITE_CONFIG = {
     // footer/contact address always; (2) as the last-resort map fallback,
     // only if BOTH mapEmbedSrc and business.geo below are left empty.
     // Deliberately just "Denton, TX 76201" (no street) since there's no
-    // real street address yet — see contact.address.line1.
+    // real street address yet — see contact.address.line1. SWAP THIS for
+    // the client's real, full street address at launch (and fill in
+    // mapEmbedSrc and/or business.geo below too) so the map — and
+    // "Get Directions" — point at the actual business location, not just
+    // the city in general.
     mapQuery: "Denton, TX 76201",
     // The map picks the first of these three that's filled in, in order:
     //   1. mapEmbedSrc (this field) — paste the real src URL from Google

@@ -720,10 +720,16 @@
     var geo = (CONFIG.business && CONFIG.business.geo) || {};
     var lat = parseFloat(geo.lat);
     var lng = parseFloat(geo.lng);
+    // Without an explicit &z=, this legacy no-API-key embed endpoint falls
+    // back to a very wide default zoom for anything but a single exact
+    // address match — a city/region-level query like "Denton, TX 76201"
+    // renders zoomed out to roughly the whole state or further. z=15 for
+    // a precise coordinate pin (street-level); z=13 for a city-level text
+    // query (close enough to see streets/neighborhoods, not the globe).
     if (isFinite(lat) && isFinite(lng)) {
-      return "https://www.google.com/maps?q=" + lat + "," + lng + "&output=embed";
+      return "https://www.google.com/maps?q=" + lat + "," + lng + "&z=15&output=embed";
     }
-    return "https://www.google.com/maps?q=" + encodedAddressQuery + "&output=embed";
+    return "https://www.google.com/maps?q=" + encodedAddressQuery + "&z=13&output=embed";
   }
 
   function renderHours() {
