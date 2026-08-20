@@ -23,6 +23,14 @@
    leave a bracket in place, and never swap it for a plausible-sounding
    guess. If the real value isn't known yet, delete the stat/section rather
    than ship a number nobody can vouch for.
+
+   DEMO CONTENT NOTE: this instance is currently filled in with fictional
+   demo content for "Denton Air & Heat" (Denton, TX) — a made-up HVAC
+   business used to preview the template, not a real company. The phone
+   number, email, and all three testimonials are explicitly fictional (see
+   the comments at each) and the street address is deliberately left as
+   the [STREET_ADDRESS] placeholder rather than invented. Swap all of this
+   for a real client's real information before anything goes live.
    ========================================================================= */
 
 window.SITE_CONFIG = {
@@ -52,27 +60,31 @@ window.SITE_CONFIG = {
     // they can't read this value automatically and must be kept in sync
     // by hand whenever the real domain changes.
     siteUrl: "https://www.example.com",
-    // Social share preview image, ideally 1200x630 and a raster format
-    // (PNG/JPG) — Twitter and some Facebook crawlers don't render SVG.
-    ogImage: "images/og-placeholder.png",
+    // Social share preview image. Using hero.jpg here per request — for a
+    // pixel-perfect Open Graph crop, a dedicated 1200x630 image is ideal
+    // (see README's "Image dimensions" table), but reusing the hero shot
+    // works fine as a placeholder.
+    ogImage: "images/hero.jpg",
     // Optional, e.g. "@yourbusiness". Leave "" to omit the twitter:site tag.
     twitterHandle: ""
   },
 
   business: {
-    name: "Northstar Home Services",
-    shortName: "Northstar",
-    initials: "NHS",
+    name: "Denton Air & Heat",
+    shortName: "Denton Air",
+    initials: "DAH",
     // Optional: path to a logo image (e.g. "images/logo.svg"). Leave "" to
     // fall back to the colored initials tile above.
     logoImage: "",
-    tagline: "Reliable Home Services You Can Actually Trust",
-    foundedYear: "2014",
+    tagline: "Reliable Heating & Cooling You Can Actually Trust",
+    foundedYear: "2009",
     // schema.org type for the JSON-LD structured data. Use the most specific
     // type that still covers everything the business does — e.g. "Plumber"
     // or "Electrician" for a single-trade shop, or the broader
-    // "HomeAndConstructionBusiness" (used here) for a multi-trade business.
-    schemaType: "HomeAndConstructionBusiness",
+    // "HomeAndConstructionBusiness" for a multi-trade business. This is an
+    // HVAC-only business, so "HVACBusiness" (a schema.org LocalBusiness
+    // subtype) is the most specific fit.
+    schemaType: "HVACBusiness",
     // schema.org priceRange for the JSON-LD data — a relative indicator
     // like "$$", or a real range like "$100-$5000". Left blank, the
     // "priceRange" field is simply omitted rather than guessing.
@@ -84,7 +96,8 @@ window.SITE_CONFIG = {
     // whether the address text geocodes cleanly, so fill this in even if
     // you're not pasting a full mapEmbedSrc. Left blank, "geo" is simply
     // omitted from the structured data rather than shipping a made-up
-    // location.
+    // location — there's no real street address yet for this demo (see
+    // contact.address.line1), so these stay unset rather than guessed too.
     geo: {
       lat: "[LATITUDE]",
       lng: "[LONGITUDE]"
@@ -92,14 +105,23 @@ window.SITE_CONFIG = {
   },
 
   contact: {
-    phoneDisplay: "(828) 214-7890",
-    phoneHref: "+18282147890",
-    email: "hello@northstarhomeservices.com",
+    // Demo phone number — (940) 555-0147 uses the 555-01xx range reserved
+    // by the North American Numbering Plan for fictional use, so it can
+    // never accidentally reach a real person. Replace with the real
+    // business line before launch.
+    phoneDisplay: "(940) 555-0147",
+    phoneHref: "+19405550147",
+    // Fictional address on the reserved .example TLD (same convention as
+    // meta.siteUrl's example.com placeholder) — obviously not deliverable,
+    // named after the demo business above.
+    email: "hello@dentonairandheat.example",
     address: {
-      line1: "482 Maple Ridge Road",
-      city: "Asheville",
-      state: "NC",
-      zip: "28801",
+      // Deliberately left as a placeholder rather than an invented Denton
+      // street address — fill in the real one before this goes live.
+      line1: "[STREET_ADDRESS]",
+      city: "Denton",
+      state: "TX",
+      zip: "76201",
       country: "US"
     },
     eyebrow: "Get In Touch",
@@ -143,75 +165,75 @@ window.SITE_CONFIG = {
   },
 
   hero: {
-    eyebrow: "Asheville's Home Service Team",
-    headline: "Reliable Home Services, Done Right the First Time",
-    subheadline: "Plumbing, electrical, and HVAC experts serving Asheville families since 2014 — upfront pricing, licensed pros, and same-week appointments.",
+    eyebrow: "Denton's Trusted HVAC Team",
+    headline: "Reliable Heating & Cooling, Done Right the First Time",
+    subheadline: "Heating and cooling experts serving Denton, TX families since 2009 — upfront pricing, licensed pros, and same-week appointments.",
     primaryCtaLabel: "Get a Free Quote",
     primaryCtaHref: "#contact",
-    secondaryCtaLabel: "Call (828) 214-7890",
-    secondaryCtaHref: "tel:+18282147890",
-    ratingText: "4.9 from 312+ reviews",
+    secondaryCtaLabel: "Call (940) 555-0147",
+    secondaryCtaHref: "tel:+19405550147",
+    ratingText: "4.9 from 180+ reviews",
     image: "images/hero.jpg",
     imageAlt: "Technician servicing a rooftop commercial HVAC unit"
   },
 
   about: {
     eyebrow: "Why Homeowners Choose Us",
-    heading: "Built On Trust, Backed By 12+ Years Of Experience",
-    body: "Northstar Home Services started as a one-truck plumbing operation in 2014 and has grown into a trusted home services team — without losing the personal touch. Every technician is background-checked, licensed, and trained to treat your home like their own. We show up on time, explain the problem in plain English, and give you an upfront price before any work begins.",
+    heading: "Built On Trust, Backed By 15 Years Of Experience",
+    body: "Denton Air & Heat started as a one-truck HVAC operation in 2009 and has grown into Denton's trusted heating and cooling team — without losing the personal touch. Every technician is background-checked, licensed, and trained to treat your home like their own. We show up on time, explain the problem in plain English, and give you an upfront price before any work begins.",
     image: "images/About.jpg",
     imageAlt: "Technician inspecting a residential heat pump unit with a flashlight",
     // Every value below is a claim a real customer could ask you to prove.
     // Only put a real number here — never leave it looking like a finished stat.
     stats: [
-      { number: "12+", label: "Years in Business" },
-      { number: "3,200+", label: "Jobs Completed" },
-      { number: "78%", label: "Customers Who Refer Us" },
+      { number: "15", label: "Years in Business" },
+      { number: "4,200+", label: "Jobs Completed" },
+      { number: "98%", label: "Customers Who Refer Us" },
       { number: "24/7", label: "Emergency Availability" }
     ]
   },
 
   services: {
     eyebrow: "What We Do",
-    heading: "Full-Service Home Repair & Maintenance",
-    subheading: "From a dripping faucet to a full system install, our licensed technicians handle it with the same care and attention to detail.",
+    heading: "Complete HVAC Services for Denton Homes",
+    subheading: "From a quick repair to a full system replacement, our licensed technicians handle it with the same care and attention to detail.",
     items: [
       {
-        icon: "droplet",
-        title: "Plumbing Repair",
-        description: "Leaky pipes, running toilets, and low water pressure — diagnosed and fixed fast, with no surprise charges."
-      },
-      {
-        icon: "waves",
-        title: "Drain & Sewer Cleaning",
-        description: "Fast, thorough clearing for stubborn clogs using camera inspection to find the real cause, not just the symptom."
+        icon: "thermometer",
+        title: "AC Repair",
+        description: "Fast, reliable repairs for every major AC brand — diagnosed right the first time, with no surprise charges."
       },
       {
         icon: "flame",
-        title: "Water Heater Service",
-        description: "Repair, maintenance, and same-day installation for tank and tankless water heaters, all major brands."
+        title: "Heating & Furnace Repair",
+        description: "Furnace not keeping up? We repair and tune up gas, electric, and heat pump systems to get your home warm again fast."
       },
       {
-        icon: "zap",
-        title: "Electrical Services",
-        description: "Panel upgrades, outlet repairs, and lighting installs completed safely and up to code, every time."
+        icon: "wrench",
+        title: "System Installation",
+        description: "Full system replacements and new installs, sized right for your home and backed by manufacturer warranties."
       },
       {
-        icon: "thermometer",
-        title: "HVAC Repair & Install",
-        description: "Keep your home comfortable year-round with tune-ups, repairs, and full system replacements."
+        icon: "settings",
+        title: "Preventative Maintenance",
+        description: "Seasonal tune-ups that catch small problems before they become expensive breakdowns."
+      },
+      {
+        icon: "waves",
+        title: "Duct Cleaning",
+        description: "Thorough duct cleaning that improves airflow and indoor air quality throughout your home."
       },
       {
         icon: "shield-alert",
-        title: "Emergency Repairs",
-        description: "Burst pipe at midnight? We offer 24/7 emergency response."
+        title: "Emergency Service",
+        description: "AC out in a Texas summer? We offer 24/7 emergency response when you need it most."
       }
     ]
   },
 
   gallery: {
     eyebrow: "Our Work",
-    heading: "Recent Projects Around Asheville",
+    heading: "Recent Projects Around Denton",
     subheading: "A look at the craftsmanship and care that goes into every job, big or small.",
     // Add one object per photo. src can point anywhere (local file or URL);
     // alt should describe the actual photo once it replaces the placeholder.
@@ -227,28 +249,35 @@ window.SITE_CONFIG = {
 
   testimonials: {
     eyebrow: "Reviews",
-    heading: "What Our Neighbors Are Saying",
-    // Never invent quotes or reviewer names. Paste real reviews (with
-    // permission) from Google, Facebook, etc. Until then, leave these
-    // as visible placeholders rather than plausible-looking fake ones.
+    heading: "What Our Denton Neighbors Are Saying",
+    // Never invent quotes or reviewer names for a real client. Paste real
+    // reviews (with permission) from Google, Facebook, etc. Until then,
+    // leave these as visible [REVIEW_TEXT]-style placeholders rather than
+    // plausible-looking fake ones.
+    //
+    // DEMO CONTENT: the three testimonials below are explicitly fictional
+    // — requested as placeholder demo content for previewing this
+    // template's design, not real customer reviews. Replace them with
+    // real, permissioned reviews (or revert to the bracketed placeholder
+    // pattern above) before this site is used for an actual business.
     items: [
       {
-        quote: "[REVIEW_TEXT]",
-        name: "[REVIEWER_NAME]",
-        location: "[REVIEWER_LOCATION]",
-        rating: "[REVIEW_RATING]"
+        quote: "Showed up exactly when they said they would and had our AC running again within the hour. Really professional crew.",
+        name: "Marcus T.",
+        location: "Denton, TX",
+        rating: "5"
       },
       {
-        quote: "[REVIEW_TEXT]",
-        name: "[REVIEWER_NAME]",
-        location: "[REVIEWER_LOCATION]",
-        rating: "[REVIEW_RATING]"
+        quote: "Called on a Sunday when our furnace went out and they had someone here same day. Can't recommend them enough.",
+        name: "Ashley R.",
+        location: "Denton, TX",
+        rating: "5"
       },
       {
-        quote: "[REVIEW_TEXT]",
-        name: "[REVIEWER_NAME]",
-        location: "[REVIEWER_LOCATION]",
-        rating: "[REVIEW_RATING]"
+        quote: "Friendly, on time, and didn't try to upsell me on stuff I didn't need — just fixed the problem fast.",
+        name: "Jordan M.",
+        location: "Denton, TX",
+        rating: "5"
       }
     ]
   },
@@ -267,7 +296,7 @@ window.SITE_CONFIG = {
       },
       {
         question: "What areas do you serve?",
-        answer: "We proudly serve Asheville and the surrounding communities — see the \"Areas We Serve\" list in the footer for the full coverage area."
+        answer: "We proudly serve Denton and the surrounding communities — see the \"Areas We Serve\" list in the footer for the full coverage area."
       },
       {
         question: "How fast can you respond to an emergency?",
@@ -283,7 +312,7 @@ window.SITE_CONFIG = {
   hours: {
     eyebrow: "Hours & Location",
     heading: "Stop By Or Give Us A Call",
-    subheading: "Proudly serving Asheville and the surrounding communities. Emergency service is available outside regular hours.",
+    subheading: "Proudly serving Denton and the surrounding communities. Emergency service is available outside regular hours.",
     schedule: [
       { day: "Monday – Friday", time: "7:00 AM – 7:00 PM" },
       { day: "Saturday", time: "8:00 AM – 4:00 PM" },
@@ -301,7 +330,9 @@ window.SITE_CONFIG = {
     // Plain-text address, used two ways: (1) feeds "Get Directions" and the
     // footer/contact address always; (2) as the last-resort map fallback,
     // only if BOTH mapEmbedSrc and business.geo below are left empty.
-    mapQuery: "482 Maple Ridge Road, Asheville, NC 28801",
+    // Deliberately just "Denton, TX 76201" (no street) since there's no
+    // real street address yet — see contact.address.line1.
+    mapQuery: "Denton, TX 76201",
     // The map picks the first of these three that's filled in, in order:
     //   1. mapEmbedSrc (this field) — paste the real src URL from Google
     //      Maps → Share → Embed a map → copy HTML → grab the iframe's
@@ -311,9 +342,8 @@ window.SITE_CONFIG = {
     //      coordinates. Reliable even for a brand-new listing Google
     //      hasn't fully indexed yet.
     //   3. mapQuery above — a plain-text address search. Works for any
-    //      real, geocodable address, but a fictional or not-yet-listed
-    //      one (like this template's placeholder default) resolves only
-    //      to the city/zip level, not a street pin.
+    //      real, geocodable address; with no street address yet, this
+    //      currently just centers the map on Denton generally.
     // Leave "" to skip straight to option 2, or 3 if that's empty too.
     mapEmbedSrc: ""
   },
@@ -323,20 +353,26 @@ window.SITE_CONFIG = {
   // and feeds the JSON-LD "areaServed" field — one list, two consumers,
   // so it can't drift out of sync. Leave empty to omit both.
   serviceAreas: [
-    "Asheville",
-    "Arden",
-    "Black Mountain",
-    "Weaverville"
+    "Denton",
+    "Corinth",
+    "Lake Dallas",
+    "Sanger",
+    "Argyle",
+    "Krum",
+    "Ponder"
   ],
 
   footer: {
-    tagline: "Locally owned and operated, serving Asheville since 2014. [LICENSE_INSURANCE_STATUS].",
+    tagline: "Locally owned and operated, serving Denton since 2009. [LICENSE_INSURANCE_STATUS].",
     quickLinksHeading: "Quick Links",
     contactHeading: "Contact",
     hoursHeading: "Hours",
     // Confirm the real license number and insurance/bonding status with the
-    // business owner before this ships — never guess or leave it looking real.
-    licenseNote: "NC Contractor License #[LICENSE_NUMBER] · [INSURANCE_BONDING_STATUS]"
+    // business owner before this ships — never guess or leave it looking
+    // real. TACLB is the real license prefix used by licensed Texas A/C
+    // contractors, kept here for authenticity even though the number
+    // itself is still a placeholder.
+    licenseNote: "TX TACLB #[LICENSE_NUMBER] · [INSURANCE_BONDING_STATUS]"
   },
 
   mobileBar: {
