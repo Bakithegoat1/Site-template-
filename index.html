@@ -189,14 +189,14 @@
             </div>
             <div class="form-field">
               <label for="cf-phone">Phone</label>
-              <input type="tel" id="cf-phone" name="phone" required autocomplete="tel" aria-describedby="cf-phone-error">
+              <input type="tel" id="cf-phone" name="phone" required inputmode="tel" autocomplete="tel" aria-describedby="cf-phone-error">
               <span class="field-error" id="cf-phone-error" aria-live="polite"></span>
             </div>
           </div>
           <div class="form-row">
             <div class="form-field">
               <label for="cf-email">Email</label>
-              <input type="email" id="cf-email" name="email" required autocomplete="email" aria-describedby="cf-email-error">
+              <input type="email" id="cf-email" name="email" autocomplete="email" aria-describedby="cf-email-error">
               <span class="field-error" id="cf-email-error" aria-live="polite"></span>
             </div>
             <div class="form-field">
@@ -213,6 +213,7 @@
 
           <input type="hidden" name="access_key" id="cf-access-key">
           <input type="hidden" name="subject" id="cf-subject">
+          <input type="hidden" name="from_name" id="cf-from-name">
 
           <!-- Honeypot: hidden from sighted/keyboard/screen-reader users, but
                a naive spam bot that fills every field will fill this one too.

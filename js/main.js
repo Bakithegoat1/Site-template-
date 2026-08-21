@@ -878,14 +878,16 @@
     var errorEl = document.getElementById("form-error");
     var subjectField = document.getElementById("cf-subject");
     var accessKeyField = document.getElementById("cf-access-key");
+    var fromNameField = document.getElementById("cf-from-name");
     if (!form) return;
 
     var cc = CONFIG.contact || {};
-    if (subjectField) {
-      subjectField.value = "New quote request — " + ((CONFIG.business && CONFIG.business.name) || "website");
-    }
+    var businessName = (CONFIG.business && CONFIG.business.name) || "";
     if (accessKeyField) {
       accessKeyField.value = cc.web3FormsAccessKey || "";
+    }
+    if (fromNameField) {
+      fromNameField.value = businessName;
     }
 
     wireInlineValidation(form);
@@ -953,12 +955,34 @@
         return;
       }
 
+      // Subject is built fresh per submission (visitor name + service
+      // aren't known until now); from_name/access_key were already filled
+      // in at wireForm() time since those don't depend on the submission.
+      var nameField = form.querySelector('[name="name"]');
+      var serviceField = form.querySelector('[name="service"]');
+      var visitorName = nameField ? nameField.value.trim() : "";
+      var selectedService = serviceField ? serviceField.value.trim() : "";
+      if (subjectField) {
+        subjectField.value = "New quote request: " + visitorName + " — " + selectedService +
+          (businessName ? " (" + businessName + ")" : "");
+      }
+
+      var formData = new FormData(form);
+
+      // Reply-to: only send it when the visitor's email is present and
+      // valid, so the owner never gets a broken "reply to" address.
+      var emailField = form.querySelector('[name="email"]');
+      var emailValue = emailField ? emailField.value.trim() : "";
+      if (emailValue && emailField.checkValidity()) {
+        formData.set("replyto", emailValue);
+      }
+
       setLoading(true);
 
       fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(form)
+        body: formData
       }).then(function (res) {
         setLoading(false);
         if (res.ok) {
