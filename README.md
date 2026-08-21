@@ -78,9 +78,10 @@ Page-level SEO tags, written into `<head>` by `main.js`.
 - `email` — used as a `mailto:` link wherever it appears.
 - `address` — `line1`, `city`, `state`, `zip`, `country`.
 - `eyebrow`, `heading`, `subheading` — contact section copy.
-- `formEndpoint` — a Formspree endpoint (`https://formspree.io/f/...`).
-  Left as the `[FORMSPREE_ENDPOINT]` bracket placeholder, the form shows
-  a clear "not connected" error instead of silently failing.
+- `web3FormsAccessKey` — the client's Web3Forms access key (see "Set the
+  Web3Forms access key" below for why each client should have their own).
+  Left blank or bracketed, the form shows a clear "not connected" error
+  instead of silently failing.
 - `formSuccessMessage` — shown in the confirmation panel that replaces
   the form on a successful submission.
 - `formErrorMessage` — shown on failure; the business phone number is
@@ -184,10 +185,13 @@ the accent system.
 3. **Replace images** — swap every `images/placeholder.svg` reference in
    `config.js` for real photos (see dimensions below), and set
    `business.logoImage` if a logo file exists. Update `meta.ogImage` too.
-4. **Set the Formspree endpoint** — create a form at
-   [formspree.io](https://formspree.io) and paste it into
-   `contact.formEndpoint`, replacing the `[FORMSPREE_ENDPOINT]`
-   placeholder.
+4. **Set the Web3Forms access key** — have the client create their own free
+   access key at [web3forms.com](https://web3forms.com) using their own
+   email address, and paste it into `contact.web3FormsAccessKey`. Use the
+   client's email, not yours: the key is tied to whatever inbox creates it,
+   so this makes the client the owner of their own form. It keeps working
+   on its own — no dependency on you, and no per-client setup on your
+   end — and submissions land straight in their inbox instead of yours.
 5. **Update the map embed** — get the real address-based embed from
    Google Maps (Share → Embed a map) into `hours.mapEmbedSrc`, or at
    minimum fill in `business.geo.lat`/`lng` (see the `hours` field notes

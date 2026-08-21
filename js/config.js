@@ -11,8 +11,8 @@
      2. Update COLORS to the client's brand palette.
      3. Replace images/placeholder.svg references with real photos (or point
         paths elsewhere), and set business.logoImage if a logo file exists.
-     4. Set contact.formEndpoint to a real Formspree endpoint (formspree.io)
-        so the contact form actually sends anywhere.
+     4. Set contact.web3FormsAccessKey to the client's own Web3Forms access
+        key (see README) so the contact form actually sends anywhere.
      5. Set meta.siteUrl to the real deployed domain, and business.geo to
         the real coordinates, before this goes live (SEO/JSON-LD fields).
      6. Open index.html in a browser — done, no build step required.
@@ -127,11 +127,11 @@ window.SITE_CONFIG = {
     eyebrow: "Get In Touch",
     heading: "Request Your Free Quote",
     subheading: "Tell us a bit about the project and we'll get back to you within one business hour during our regular hours.",
-    // Create a form at formspree.io, then paste its endpoint here — it'll
-    // look like "https://formspree.io/f/abcdwxyz". The form won't submit
-    // (it shows a clear "not connected" error instead) until this bracket
-    // placeholder is replaced with a real endpoint.
-    formEndpoint: "[FORMSPREE_ENDPOINT]",
+    // Web3Forms access key — create a free one at web3forms.com using the
+    // client's own email address (see README for why it should be theirs,
+    // not yours). The form won't submit (it shows a clear "not connected"
+    // error instead) until this is set to a real access key.
+    web3FormsAccessKey: "5c932853-5458-4d79-85a7-9566be69fce9",
     formSuccessMessage: "Thanks — your request has been received! A member of our team will reach out within one business hour.",
     // The business phone is always appended automatically as a fallback
     // when this shows, so it doesn't need to be repeated here.

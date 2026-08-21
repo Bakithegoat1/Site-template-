@@ -870,16 +870,22 @@
     return fields;
   }
 
+  var WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+
   function wireForm() {
     var form = document.getElementById("contact-form");
     var confirmation = document.getElementById("form-confirmation");
     var errorEl = document.getElementById("form-error");
     var subjectField = document.getElementById("cf-subject");
+    var accessKeyField = document.getElementById("cf-access-key");
     if (!form) return;
 
     var cc = CONFIG.contact || {};
     if (subjectField) {
       subjectField.value = "New quote request — " + ((CONFIG.business && CONFIG.business.name) || "website");
+    }
+    if (accessKeyField) {
+      accessKeyField.value = cc.web3FormsAccessKey || "";
     }
 
     wireInlineValidation(form);
@@ -941,15 +947,15 @@
         return;
       }
 
-      var endpoint = cc.formEndpoint || "";
-      if (!endpoint || endpoint.charAt(0) === "[") {
-        showError("This form isn't connected yet — set contact.formEndpoint in config.js to a real Formspree endpoint.");
+      var accessKey = cc.web3FormsAccessKey || "";
+      if (!accessKey || accessKey.charAt(0) === "[") {
+        showError("This form isn't connected yet — set contact.web3FormsAccessKey in config.js to a real Web3Forms access key.");
         return;
       }
 
       setLoading(true);
 
-      fetch(endpoint, {
+      fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
         headers: { Accept: "application/json" },
         body: new FormData(form)

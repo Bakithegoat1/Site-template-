@@ -211,11 +211,14 @@
             <span class="field-error" id="cf-message-error" aria-live="polite"></span>
           </div>
 
-          <input type="hidden" name="_subject" id="cf-subject">
+          <input type="hidden" name="access_key" id="cf-access-key">
+          <input type="hidden" name="subject" id="cf-subject">
 
           <!-- Honeypot: hidden from sighted/keyboard/screen-reader users, but
                a naive spam bot that fills every field will fill this one too.
-               Formspree drops submissions where "_gotcha" is non-empty. -->
+               Checked in JS before the request is ever sent — if it's
+               filled, the submission is quietly dropped instead of reaching
+               the form endpoint. -->
           <div class="hp-field" aria-hidden="true">
             <label for="cf-hp">Leave this field blank</label>
             <input type="text" id="cf-hp" name="_gotcha" tabindex="-1" autocomplete="off">
