@@ -850,7 +850,7 @@
   // native browser bubble) and returns the list of validated fields.
   function wireInlineValidation(form) {
     var fields = Array.prototype.slice.call(form.querySelectorAll("input, select, textarea"))
-      .filter(function (f) { return f.name !== "_gotcha"; });
+      .filter(function (f) { return f.name !== "botcheck"; });
 
     fields.forEach(function (field) {
       // The default action of "invalid" is the native bubble — prevent
@@ -943,7 +943,7 @@
 
       // Honeypot: real users never fill this in. If it's filled, quietly
       // drop the submission (fake success) instead of hitting the endpoint.
-      var honeypot = form.querySelector('[name="_gotcha"]');
+      var honeypot = form.querySelector('[name="botcheck"]');
       if (honeypot && honeypot.value) {
         showSuccess();
         return;
